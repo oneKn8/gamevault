@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Game bundles copied into public/ are pre-built artifacts
+    "public/games/**",
   ]),
 ]);
 
