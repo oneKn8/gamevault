@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Orbitron, Press_Start_2P } from "next/font/google";
+import { Providers } from "@/components/Providers";
+import { AuthButton } from "@/components/AuthButton";
 import "./globals.css";
 
 const orbitron = Orbitron({
@@ -30,36 +32,36 @@ export default function RootLayout({
       <body
         className={`${orbitron.variable} ${pressStart.variable} antialiased min-h-screen`}
       >
-        <header className="sticky top-0 z-50 border-b border-neon-blue/20 bg-neon-bg/80 backdrop-blur-md">
-          <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-            <a href="/" className="flex items-center gap-2">
-              <span className="font-[family-name:var(--font-display)] text-xl font-bold tracking-wider text-neon-yellow">
-                GAME
-              </span>
-              <span className="font-[family-name:var(--font-display)] text-xl font-bold tracking-wider text-neon-blue">
-                VAULT
-              </span>
-            </a>
-            <div className="flex items-center gap-6">
-              <a
-                href="/games"
-                className="text-sm text-hud-label transition-colors hover:text-hud-text"
-              >
-                Games
+        <Providers>
+          <header className="sticky top-0 z-50 border-b border-neon-blue/20 bg-neon-bg/80 backdrop-blur-md">
+            <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+              <a href="/" className="flex items-center gap-2">
+                <span className="font-[family-name:var(--font-display)] text-xl font-bold tracking-wider text-neon-yellow">
+                  GAME
+                </span>
+                <span className="font-[family-name:var(--font-display)] text-xl font-bold tracking-wider text-neon-blue">
+                  VAULT
+                </span>
               </a>
-              <a
-                href="/leaderboards"
-                className="text-sm text-hud-label transition-colors hover:text-hud-text"
-              >
-                Leaderboards
-              </a>
-              <button className="rounded-md border border-neon-blue/40 bg-neon-blue/10 px-4 py-1.5 text-sm font-medium text-neon-blue transition-all hover:bg-neon-blue/20 hover:shadow-neon-blue">
-                Sign In
-              </button>
-            </div>
-          </nav>
-        </header>
-        <main>{children}</main>
+              <div className="flex items-center gap-6">
+                <a
+                  href="/games"
+                  className="text-sm text-hud-label transition-colors hover:text-hud-text"
+                >
+                  Games
+                </a>
+                <a
+                  href="/leaderboards"
+                  className="text-sm text-hud-label transition-colors hover:text-hud-text"
+                >
+                  Leaderboards
+                </a>
+                <AuthButton />
+              </div>
+            </nav>
+          </header>
+          <main>{children}</main>
+        </Providers>
       </body>
     </html>
   );
