@@ -42,7 +42,7 @@ export class GameController {
 
     // Add bots
     this.botIds = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 4; i++) {
       const id = `bot_${i}`;
       const bot = createPlayer(id, BOT_NAMES[i], i + 1);
       this.state.players.set(id, bot);

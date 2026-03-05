@@ -36,6 +36,7 @@ export interface SerializedPlayer {
   username: string;
   alive: boolean;
   aimAngle: number;
+  spawnShield: number;
   echoX?: number;
   echoY?: number;
   echoDim?: 'light' | 'shadow';
@@ -93,6 +94,7 @@ export function serializePlayer(p: PlayerState, ready?: boolean): SerializedPlay
     username: p.username,
     alive: p.alive,
     aimAngle: p.aimAngle,
+    spawnShield: p.spawnShield,
   };
   if (p.echo) {
     sp.echoX = p.echo.position.x;
@@ -129,5 +131,6 @@ export function deserializePlayer(sp: SerializedPlayer): PlayerState {
     username: sp.username,
     alive: sp.alive,
     aimAngle: sp.aimAngle,
+    spawnShield: sp.spawnShield ?? 0,
   };
 }

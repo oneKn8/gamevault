@@ -62,5 +62,7 @@ export function distance(a: Vector2, b: Vector2): number {
 export function projectileHitsPlayer(proj: Projectile, player: PlayerState): boolean {
   if (proj.ownerId === player.id) return false;
   if (proj.dimension !== player.dimension) return false;
+  if (!player.alive) return false;
+  if (player.spawnShield > 0) return false;
   return circleCollision(proj.position, PROJECTILE_RADIUS, player.position, PLAYER_RADIUS);
 }

@@ -1,9 +1,11 @@
 export const ARENA_WIDTH = 1200;
 export const ARENA_HEIGHT = 1200;
 
-export const PLAYER_SPEED = 200;
+export const PLAYER_SPEED = 220;
 export const PLAYER_RADIUS = 14;
-export const PLAYER_MAX_HEALTH = 100;
+export const PLAYER_MAX_HEALTH = 150;
+
+export const SPAWN_INVINCIBILITY = 2.5;
 
 export const PHASE_SHIFT_COOLDOWN = 5;
 export const ECHO_DURATION = 1;
@@ -25,10 +27,10 @@ export const RIFT_PORTAL_RADIUS = 30;
 export const RIFT_PORTAL_ACTIVE_DURATION = 8;
 export const RIFT_PORTAL_COOLDOWN = 12;
 
-export const ATTACK_COOLDOWN = 0.3;
-export const PROJECTILE_SPEED = 400;
-export const PROJECTILE_DAMAGE = 15;
-export const PROJECTILE_LIFETIME = 1.2;
+export const ATTACK_COOLDOWN = 0.4;
+export const PROJECTILE_SPEED = 380;
+export const PROJECTILE_DAMAGE = 12;
+export const PROJECTILE_LIFETIME = 1.0;
 export const PROJECTILE_RADIUS = 5;
 
 export const WIN_SCORE = 100;

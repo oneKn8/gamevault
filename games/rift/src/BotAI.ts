@@ -67,11 +67,12 @@ export function getBotInput(bot: PlayerState, state: ArenaState, dt: number): In
     moveY = Math.sin(brain.wanderAngle);
   }
 
-  // Look for nearby enemies to attack
+  // Look for nearby enemies to attack -- only if close and not capturing
   let nearestEnemy: PlayerState | null = null;
-  let nearestDist = 300;
+  let nearestDist = 180;
   for (const [, p] of state.players) {
     if (p.id === bot.id || !p.alive || p.dimension !== bot.dimension) continue;
+    if (p.spawnShield > 0) continue;
     const d = distance(bot.position, p.position);
     if (d < nearestDist) {
       nearestDist = d;
@@ -79,14 +80,15 @@ export function getBotInput(bot: PlayerState, state: ArenaState, dt: number): In
     }
   }
 
-  if (nearestEnemy) {
+  // Only attack sometimes -- bots are capture-focused, not bloodthirsty
+  if (nearestEnemy && nearestDist < 150) {
     aimAngle = Math.atan2(
       nearestEnemy.position.y - bot.position.y,
       nearestEnemy.position.x - bot.position.x,
     );
-    if (brain.attackTimer <= 0) {
+    if (brain.attackTimer <= 0 && Math.random() < 0.5) {
       attack = true;
-      brain.attackTimer = 0.4 + Math.random() * 0.3;
+      brain.attackTimer = 1.0 + Math.random() * 1.5;
     }
   } else {
     aimAngle = Math.atan2(moveY, moveX);
@@ -102,7 +104,7 @@ export function getBotInput(bot: PlayerState, state: ArenaState, dt: number): In
 }
 
 function pickTargetAnchor(bot: PlayerState, state: ArenaState): number {
-  // Prefer unowned anchors in our dimension, then enemy-owned
+  // Each bot picks differently with heavy randomness to avoid clustering
   let best: Anchor | null = null;
   let bestScore = -Infinity;
 
@@ -111,18 +113,26 @@ function pickTargetAnchor(bot: PlayerState, state: ArenaState): number {
 
     let score = 0;
     // Prefer same dimension
-    if (anchor.dimension === bot.dimension) score += 50;
+    if (anchor.dimension === bot.dimension) score += 40;
     // Prefer unowned
-    if (!anchor.owner) score += 30;
-    // Closer is better
+    if (!anchor.owner) score += 20;
+    // Closer is slightly better
     const dist = distance(bot.position, anchor.position);
-    score -= dist * 0.05;
-    // Add randomness
-    score += Math.random() * 20;
+    score -= dist * 0.03;
+    // Heavy randomness so bots spread across different anchors
+    score += Math.random() * 60;
 
     if (score > bestScore) {
       bestScore = score;
       best = anchor;
+    }
+  }
+
+  // Sometimes just guard an owned anchor instead
+  if (Math.random() < 0.3) {
+    const owned = state.anchors.filter(a => a.owner === bot.id);
+    if (owned.length > 0) {
+      return owned[Math.floor(Math.random() * owned.length)].id;
     }
   }
 

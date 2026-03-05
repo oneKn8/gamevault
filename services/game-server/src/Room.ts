@@ -198,6 +198,7 @@ export class Room {
         username: conn.username,
         alive: true,
         aimAngle: 0,
+        spawnShield: 0,
         ready: conn.ready,
       });
     }

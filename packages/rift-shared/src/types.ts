@@ -21,6 +21,7 @@ export interface PlayerState {
   username: string;
   alive: boolean;
   aimAngle: number;
+  spawnShield: number;
 }
 
 export interface EchoClone {

@@ -20,6 +20,7 @@ import {
   PROJECTILE_LIFETIME,
   PLAYER_COLORS,
   RESPAWN_TIME,
+  SPAWN_INVINCIBILITY,
 } from './constants';
 import { movePlayer, moveProjectile, projectileHitsPlayer, isInRange, isInArena } from './physics';
 import {
@@ -68,7 +69,7 @@ export function createPortals(): RiftPortal[] {
 
 export function createPlayer(id: string, username: string, colorIndex: number): PlayerState {
   const spawnAngle = (colorIndex / 10) * Math.PI * 2;
-  const spawnDist = 300;
+  const spawnDist = 350 + (colorIndex % 3) * 80;
   return {
     id,
     position: {
@@ -76,7 +77,7 @@ export function createPlayer(id: string, username: string, colorIndex: number): 
       y: ARENA_HEIGHT / 2 + Math.sin(spawnAngle) * spawnDist,
     },
     velocity: { x: 0, y: 0 },
-    dimension: 'light',
+    dimension: colorIndex % 3 === 0 ? 'light' : (colorIndex % 3 === 1 ? 'shadow' : 'light'),
     health: PLAYER_MAX_HEALTH,
     maxHealth: PLAYER_MAX_HEALTH,
     phaseDebt: 0,
@@ -88,6 +89,7 @@ export function createPlayer(id: string, username: string, colorIndex: number): 
     username,
     alive: true,
     aimAngle: 0,
+    spawnShield: SPAWN_INVINCIBILITY,
   };
 }
 
@@ -207,6 +209,15 @@ export function simulateTick(state: ArenaState, inputs: Map<string, InputState>,
       continue;
     }
 
+    // Spawn shield countdown
+    if (player.spawnShield > 0) {
+      player.spawnShield = Math.max(0, player.spawnShield - dt);
+      // Attacking or phase shifting cancels shield early
+      if (input.attack || input.phaseShift) {
+        player.spawnShield = 0;
+      }
+    }
+
     // Movement
     player.aimAngle = input.aimAngle;
     movePlayer(player, input, dt);
@@ -289,9 +300,11 @@ export function simulateTick(state: ArenaState, inputs: Map<string, InputState>,
 
 function respawnPlayer(player: PlayerState): void {
   const spawnAngle = Math.random() * Math.PI * 2;
-  const spawnDist = 200 + Math.random() * 200;
+  const spawnDist = 300 + Math.random() * 250;
   player.position.x = ARENA_WIDTH / 2 + Math.cos(spawnAngle) * spawnDist;
   player.position.y = ARENA_HEIGHT / 2 + Math.sin(spawnAngle) * spawnDist;
+  player.position.x = Math.max(50, Math.min(ARENA_WIDTH - 50, player.position.x));
+  player.position.y = Math.max(50, Math.min(ARENA_HEIGHT - 50, player.position.y));
   player.health = PLAYER_MAX_HEALTH;
   player.alive = true;
   player.dimension = 'light';
@@ -299,6 +312,7 @@ function respawnPlayer(player: PlayerState): void {
   player.phaseCooldown = 0;
   player.attackCooldown = 0;
   player.echo = null;
+  player.spawnShield = SPAWN_INVINCIBILITY;
 }
 
 export function resetRespawnTimers(): void {

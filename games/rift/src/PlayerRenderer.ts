@@ -63,6 +63,16 @@ export class PlayerRenderer {
       ctx.stroke();
     }
 
+    // Spawn shield visual
+    if (player.spawnShield > 0 && sameDimension) {
+      const shieldAlpha = 0.3 + Math.sin(time * 8) * 0.15;
+      ctx.strokeStyle = `rgba(255,255,255,${shieldAlpha})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(sx, sy, PLAYER_RADIUS + 8, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
     // Local player ring
     if (isLocal) {
       ctx.strokeStyle = '#FFFFFF';
