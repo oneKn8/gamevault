@@ -2,8 +2,8 @@ node_modules
 .next
 .turbo
 .planning
-neon-pacman
-research
+/neon-pacman
+/research
 *.tsbuildinfo
 games/*/dist/bundle.js
 games/*/dist/bundle.js.map
