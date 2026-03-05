@@ -4,9 +4,26 @@ import { HeroCarousel } from "@/components/HeroCarousel";
 
 export default function HomePage() {
   const games = getGameManifests();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamevault.gg";
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "GameVault Games",
+    itemListElement: games.map((g, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      url: `${siteUrl}/games/${g.id}`,
+      name: g.name,
+    })),
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero Carousel */}
       <section className="mb-12 animate-fade-in">
         <HeroCarousel games={games} />

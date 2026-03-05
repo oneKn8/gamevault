@@ -33,8 +33,31 @@ export default async function GameDetailPage({
   const game = getGameBySlug(slug);
   if (!game) notFound();
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamevault.gg";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "VideoGame",
+    name: game.name,
+    description: game.description,
+    url: `${siteUrl}/games/${game.id}`,
+    playMode: game.multiplayer ? "MultiPlayer" : "SinglePlayer",
+    gamePlatform: "Web Browser",
+    genre: game.category,
+    applicationCategory: "Game",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      availability: "https://schema.org/InStock",
+    },
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Cover banner */}
       <div className="relative mb-8 h-48 overflow-hidden rounded-xl">
         <GameCover gameId={game.id} className="h-full w-full object-cover" />

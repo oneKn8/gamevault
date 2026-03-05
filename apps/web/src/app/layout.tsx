@@ -44,6 +44,29 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "GameVault",
+              url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamevault.gg",
+              description:
+                "Open-source multiplayer browser game hub. Play classic games with friends instantly.",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamevault.gg"}/games?q={search_term_string}`,
+                },
+                "query-input": "required name=search_term_string",
+              },
+            }),
+          }}
+        />
+      </head>
       <body
         className={`${inter.variable} font-[family-name:var(--font-sans)] antialiased min-h-screen`}
       >
