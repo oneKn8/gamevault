@@ -2,6 +2,7 @@ import { getGameBySlug, getGameManifests } from "@/lib/games";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { NeonButton } from "@/components/NeonButton";
+import { Leaderboard } from "@/components/Leaderboard";
 
 export function generateStaticParams() {
   return getGameManifests().map((g) => ({ slug: g.id }));
@@ -56,12 +57,12 @@ export default async function GameDetailPage({
         ))}
       </div>
 
-      {/* Leaderboard placeholder */}
-      <section className="rounded-lg border border-neon-blue/15 bg-neon-bg-card p-6">
+      {/* Leaderboard */}
+      <section>
         <h2 className="mb-4 font-[family-name:var(--font-display)] text-lg font-semibold text-hud-text">
           Leaderboard
         </h2>
-        <p className="text-sm text-hud-dim">Coming soon in Phase 2.</p>
+        <Leaderboard gameId={game.id} />
       </section>
     </div>
   );
