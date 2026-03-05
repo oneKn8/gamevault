@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getGameBySlug, getGameManifests } from "@/lib/games";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -7,6 +8,20 @@ import { GameCover } from "@/components/covers";
 
 export function generateStaticParams() {
   return getGameManifests().map((g) => ({ slug: g.id }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const game = getGameBySlug(slug);
+  if (!game) return {};
+  return {
+    title: game.name,
+    description: game.description,
+  };
 }
 
 export default async function GameDetailPage({

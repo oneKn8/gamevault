@@ -11,9 +11,30 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "GameVault - Multiplayer Browser Games",
-  description: "Open-source multiplayer browser game hub. Play classic games with friends instantly.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamevault.gg"
+  ),
+  title: {
+    default: "GameVault - Multiplayer Browser Games",
+    template: "%s | GameVault",
+  },
+  description:
+    "Open-source multiplayer browser game hub. Play classic games with friends instantly.",
   keywords: ["games", "multiplayer", "browser games", "arcade"],
+  openGraph: {
+    type: "website",
+    siteName: "GameVault",
+    title: "GameVault - Multiplayer Browser Games",
+    description:
+      "Open-source multiplayer browser game hub. Play classic games with friends instantly.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GameVault - Multiplayer Browser Games",
+    description:
+      "Open-source multiplayer browser game hub. Play classic games with friends instantly.",
+  },
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
