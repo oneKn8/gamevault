@@ -20,9 +20,9 @@ export function createGridHelper(scene: Scene): void {
   borderGeo.setAttribute('position', new Float32BufferAttribute(borderVerts, 3));
 
   const borderMat = new LineBasicMaterial({
-    color: 0x888888,
+    color: 0x666666,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.7,
   });
 
   const border = new LineSegments(borderGeo, borderMat);
@@ -43,9 +43,9 @@ export function createGridHelper(scene: Scene): void {
   gridGeo.setAttribute('position', new Float32BufferAttribute(gridVerts, 3));
 
   const gridMat = new LineBasicMaterial({
-    color: 0x555555,
+    color: 0x444444,
     transparent: true,
-    opacity: 0.2,
+    opacity: 0.25,
   });
 
   const grid = new LineSegments(gridGeo, gridMat);

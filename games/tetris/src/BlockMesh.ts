@@ -1,24 +1,47 @@
 import {
   BoxGeometry,
   MeshPhongMaterial,
+  MeshBasicMaterial,
   Mesh,
-  EdgesGeometry,
-  LineSegments,
-  LineBasicMaterial,
+  PlaneGeometry,
   Group,
+  Color,
 } from 'three';
 
-// Cache geometries to avoid recreating them
-const blockGeometry = new BoxGeometry(0.95, 0.95, 0.95);
-const edgesGeo = new EdgesGeometry(blockGeometry);
+// Shared geometries
+const blockGeometry = new BoxGeometry(0.92, 0.92, 0.92);
+
+// Bevel highlight plane: covers top-left corner strip
+// Positioned slightly in front of the block face
+const highlightGeo = new PlaneGeometry(0.78, 0.06);
+const shadowGeo = new PlaneGeometry(0.78, 0.06);
+const highlightVGeo = new PlaneGeometry(0.06, 0.78);
+const shadowVGeo = new PlaneGeometry(0.06, 0.78);
 
 // Mesh pools keyed by color hex
 const meshPool: Map<number, Group[]> = new Map();
 const ghostPool: Group[] = [];
 
-/** Creates a 3D block mesh group (solid box + clean edges). */
+/** Lighten a color by mixing with white at the given ratio. */
+function lighten(hex: number, amount: number): number {
+  const c = new Color(hex);
+  c.r = Math.min(1, c.r + amount);
+  c.g = Math.min(1, c.g + amount);
+  c.b = Math.min(1, c.b + amount);
+  return c.getHex();
+}
+
+/** Darken a color by scaling down. */
+function darken(hex: number, amount: number): number {
+  const c = new Color(hex);
+  c.r = Math.max(0, c.r - amount);
+  c.g = Math.max(0, c.g - amount);
+  c.b = Math.max(0, c.b - amount);
+  return c.getHex();
+}
+
+/** Creates a 3D block mesh group with bevel highlight/shadow edges for depth. */
 export function createBlockMesh(color: number, _emissive: number): Group {
-  // Check pool
   const pool = meshPool.get(color);
   if (pool && pool.length > 0) {
     const reused = pool.pop()!;
@@ -28,52 +51,70 @@ export function createBlockMesh(color: number, _emissive: number): Group {
 
   const group = new Group();
 
-  // Solid block -- clean opaque material, no emissive glow
-  const material = new MeshPhongMaterial({
+  // Main solid block
+  const mat = new MeshPhongMaterial({
     color,
     emissive: 0x000000,
-    shininess: 40,
+    shininess: 60,
     transparent: false,
     opacity: 1.0,
   });
-  const mesh = new Mesh(blockGeometry, material);
+  const mesh = new Mesh(blockGeometry, mat);
   group.add(mesh);
 
-  // Subtle dark edges for definition
-  const edgeMaterial = new LineBasicMaterial({
-    color: 0x000000,
-    transparent: true,
-    opacity: 0.15,
-  });
-  const edges = new LineSegments(edgesGeo, edgeMaterial);
-  group.add(edges);
+  const hiColor = lighten(color, 0.35);
+  const shColor = darken(color, 0.30);
+  const z = 0.47; // just in front of block face
 
-  // Store the original color for pool lookup
+  // Top highlight strip
+  const hiMat = new MeshBasicMaterial({ color: hiColor, transparent: true, opacity: 0.55 });
+  const topHi = new Mesh(highlightGeo, hiMat);
+  topHi.position.set(0, 0.385, z);
+  group.add(topHi);
+
+  // Bottom shadow strip
+  const shMat = new MeshBasicMaterial({ color: shColor, transparent: true, opacity: 0.55 });
+  const botSh = new Mesh(shadowGeo, shMat);
+  botSh.position.set(0, -0.385, z);
+  group.add(botSh);
+
+  // Left highlight strip
+  const hiMatV = new MeshBasicMaterial({ color: hiColor, transparent: true, opacity: 0.45 });
+  const leftHi = new Mesh(highlightVGeo, hiMatV);
+  leftHi.position.set(-0.385, 0, z);
+  group.add(leftHi);
+
+  // Right shadow strip
+  const shMatV = new MeshBasicMaterial({ color: shColor, transparent: true, opacity: 0.45 });
+  const rightSh = new Mesh(shadowVGeo, shMatV);
+  rightSh.position.set(0.385, 0, z);
+  group.add(rightSh);
+
   group.userData.blockColor = color;
 
   return group;
 }
 
-/** Creates a ghost (wireframe) block mesh for the drop preview. */
+/** Creates a ghost (wireframe outline) block for the drop preview. */
 export function createGhostMesh(color: number): Group {
   if (ghostPool.length > 0) {
     const reused = ghostPool.pop()!;
-    // Update color
-    const edges = reused.children[0] as LineSegments;
-    (edges.material as LineBasicMaterial).color.set(color);
+    const mesh = reused.children[0] as Mesh;
+    (mesh.material as MeshBasicMaterial).color.set(color);
     reused.visible = true;
     return reused;
   }
 
   const group = new Group();
 
-  const edgeMaterial = new LineBasicMaterial({
+  // Subtle transparent filled block for ghost
+  const mat = new MeshBasicMaterial({
     color,
     transparent: true,
-    opacity: 0.35,
+    opacity: 0.12,
   });
-  const edges = new LineSegments(edgesGeo, edgeMaterial);
-  group.add(edges);
+  const mesh = new Mesh(blockGeometry, mat);
+  group.add(mesh);
 
   return group;
 }

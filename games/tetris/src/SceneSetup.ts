@@ -17,7 +17,7 @@ export interface SceneObjects {
 export function createScene(canvas: HTMLCanvasElement): SceneObjects {
   // Scene with a clean dark background (not pitch black)
   const scene = new Scene();
-  scene.background = new Color(0x1e1e28);
+  scene.background = new Color(0x1a1a2e);
 
   // Camera: positioned to see the 10x20 board with a slight perspective angle
   const camera = new PerspectiveCamera(45, 1, 0.1, 100);
