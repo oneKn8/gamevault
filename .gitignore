@@ -1,12 +1,14 @@
 node_modules/
-dist/
-!games/*/dist/
 .next/
 .turbo/
 *.tsbuildinfo
 .env
 .env.local
 .vercel
+
+# Intermediate esbuild output (canonical copies live in apps/web/public/games/)
+games/*/dist/bundle.js
+games/*/dist/bundle.js.map
 
 # Original standalone game (monorepo copy lives in games/)
 /neon-pacman/
