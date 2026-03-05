@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { NeonButton } from "@/components/NeonButton";
 import { Leaderboard } from "@/components/Leaderboard";
+import { GameCover } from "@/components/covers";
 
 export function generateStaticParams() {
   return getGameManifests().map((g) => ({ slug: g.id }));
@@ -19,6 +20,12 @@ export default async function GameDetailPage({
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
+      {/* Cover banner */}
+      <div className="relative mb-8 h-48 overflow-hidden rounded-xl">
+        <GameCover gameId={game.id} className="h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/60 to-transparent" />
+      </div>
+
       {/* Header */}
       <div className="mb-8">
         <Link
