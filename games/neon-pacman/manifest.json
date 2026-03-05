@@ -1,0 +1,16 @@
+{
+  "id": "neon-pacman",
+  "name": "Neon Pacman",
+  "description": "Classic Pacman with a neon cyberpunk twist. Navigate the glowing maze, eat dots, avoid ghosts, and chase high scores.",
+  "category": "arcade",
+  "tags": ["classic", "arcade", "single-player", "retro", "neon"],
+  "thumbnail": "/thumbnails/neon-pacman.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 2,
+    "modes": ["solo", "co-op", "versus"],
+    "roomType": "neon-pacman"
+  },
+  "version": "1.0.0"
+}
