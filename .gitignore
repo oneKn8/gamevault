@@ -1,8 +1,6 @@
 node_modules/
 dist/
 !games/*/dist/
-games/*/dist/bundle.js
-games/*/dist/bundle.js.map
 .next/
 .turbo/
 *.tsbuildinfo
@@ -13,8 +11,6 @@ games/*/dist/bundle.js.map
 # Original standalone game (monorepo copy lives in games/)
 /neon-pacman/
 /research/
-apps/web/public/games/*/bundle.js
-apps/web/public/games/*/bundle.js.map
 apps/web/pnpm-lock.yaml
 apps/web/pnpm-workspace.yaml
 apps/web/README.md

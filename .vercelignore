@@ -5,5 +5,3 @@ node_modules
 /neon-pacman
 /research
 *.tsbuildinfo
-games/*/dist/bundle.js
-games/*/dist/bundle.js.map
