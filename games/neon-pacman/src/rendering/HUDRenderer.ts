@@ -1,4 +1,4 @@
-import { HUD_COLOR, HUD_LABEL, HUD_DIM, PACMAN_COLOR, PACMAN_GLOW } from '../constants';
+import { HUD_COLOR, HUD_LABEL, HUD_DIM, PACMAN_COLOR } from '../constants';
 
 export class HUDRenderer {
   private static readonly PADDING_TOP = 14;
@@ -24,21 +24,16 @@ export class HUDRenderer {
     // --- Score (left-aligned) ---
     ctx.font = HUDRenderer.FONT_LABEL;
     ctx.fillStyle = HUD_LABEL;
-    ctx.shadowColor = 'rgba(60, 100, 200, 0.4)';
-    ctx.shadowBlur = 4;
     ctx.textAlign = 'left';
     ctx.fillText('SCORE', margin, hudY - 13);
 
     ctx.font = HUDRenderer.FONT_VALUE;
     ctx.fillStyle = HUD_COLOR;
-    ctx.shadowColor = 'rgba(100, 140, 255, 0.5)';
-    ctx.shadowBlur = 6;
     ctx.fillText(`${score}`, margin, hudY);
 
     // --- High score (centered) ---
     ctx.font = HUDRenderer.FONT_LABEL;
     ctx.fillStyle = HUD_DIM;
-    ctx.shadowBlur = 3;
     ctx.textAlign = 'center';
     ctx.fillText('HIGH', canvasWidth / 2, hudY - 13);
 
@@ -50,17 +45,13 @@ export class HUDRenderer {
     ctx.font = HUDRenderer.FONT_LABEL;
     ctx.fillStyle = HUD_LABEL;
     ctx.textAlign = 'right';
-    ctx.shadowBlur = 3;
     ctx.fillText('LEVEL', canvasWidth - margin, hudY - 13);
 
     ctx.font = HUDRenderer.FONT_VALUE;
     ctx.fillStyle = HUD_COLOR;
-    ctx.shadowColor = 'rgba(100, 140, 255, 0.5)';
-    ctx.shadowBlur = 6;
     ctx.fillText(`${level}`, canvasWidth - margin, hudY);
 
-    // --- Lives (small Pacman icons, centered between score and high) ---
-    ctx.shadowBlur = 0;
+    // --- Lives (small Pacman icons) ---
     const iconR = HUDRenderer.LIFE_ICON_RADIUS;
     const iconSpacing = iconR * 2.8;
     const totalWidth = lives * iconSpacing;
@@ -68,8 +59,6 @@ export class HUDRenderer {
     const iconY = hudY - 6;
 
     ctx.fillStyle = PACMAN_COLOR;
-    ctx.shadowColor = PACMAN_GLOW;
-    ctx.shadowBlur = 6;
 
     for (let i = 0; i < lives; i++) {
       const cx = startX + i * iconSpacing;

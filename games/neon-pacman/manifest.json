@@ -1,9 +1,9 @@
 {
   "id": "neon-pacman",
-  "name": "Neon Pacman",
-  "description": "Classic Pacman with a neon cyberpunk twist. Navigate the glowing maze, eat dots, avoid ghosts, and chase high scores.",
+  "name": "Pac-Man",
+  "description": "Classic Pac-Man. Navigate the maze, eat dots, avoid ghosts, and chase high scores.",
   "category": "arcade",
-  "tags": ["classic", "arcade", "single-player", "retro", "neon"],
+  "tags": ["classic", "arcade", "single-player"],
   "thumbnail": "/thumbnails/neon-pacman.png",
   "entry": "index.html",
   "multiplayer": {

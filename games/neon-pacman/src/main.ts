@@ -18,7 +18,6 @@ function sizeCanvas(layout: Layout): void {
   const gameW = layout.width * TILE_SIZE;
   const gameH = layout.height * TILE_SIZE + HUD_HEIGHT;
 
-  // Scale to fit viewport while maintaining pixel-perfect rendering
   const maxW = window.innerWidth - 40;
   const maxH = window.innerHeight - 40;
   const scale = Math.min(maxW / gameW, maxH / gameH, 2.5);
@@ -109,7 +108,7 @@ loop.onRender = (_interp: number) => {
   renderer.render(ctx, state as any);
 };
 
-// Initialize GameVault SDK (works in both embedded and standalone modes)
+// Initialize GameVault SDK
 GameVault.init();
 
 // Initial state - show title screen
@@ -121,54 +120,33 @@ function drawTitleScreen(): void {
   const w = canvas.width;
   const h = canvas.height;
 
-  // Background with subtle gradient
-  ctx.fillStyle = '#020208';
-  ctx.fillRect(0, 0, w, h);
-
-  const bgGrad = ctx.createRadialGradient(w / 2, h * 0.35, 0, w / 2, h * 0.35, w * 0.5);
-  bgGrad.addColorStop(0, 'rgba(20, 10, 60, 0.4)');
-  bgGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = bgGrad;
+  ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, w, h);
 
   ctx.save();
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
 
-  // Title - NEON
+  // Title - PAC-MAN
   ctx.font = '900 36px "Orbitron", "Press Start 2P", sans-serif';
-  ctx.fillStyle = '#ffe040';
-  ctx.shadowColor = '#ffee55';
-  ctx.shadowBlur = 35;
-  ctx.fillText('NEON', w / 2, h * 0.28);
-  ctx.fillText('NEON', w / 2, h * 0.28); // double for bloom
-
-  // Title - PACMAN
-  ctx.font = '900 28px "Orbitron", "Press Start 2P", sans-serif';
-  ctx.fillStyle = '#3388ff';
-  ctx.shadowColor = '#4499ff';
-  ctx.shadowBlur = 25;
-  ctx.fillText('PACMAN', w / 2, h * 0.28 + 42);
-  ctx.fillText('PACMAN', w / 2, h * 0.28 + 42);
+  ctx.fillStyle = '#ffcc00';
+  ctx.fillText('PAC-MAN', w / 2, h * 0.30);
 
   // Decorative line
-  ctx.shadowBlur = 0;
   const lineGrad = ctx.createLinearGradient(w * 0.2, 0, w * 0.8, 0);
   lineGrad.addColorStop(0, 'transparent');
-  lineGrad.addColorStop(0.5, 'rgba(60, 120, 255, 0.5)');
+  lineGrad.addColorStop(0.5, 'rgba(33, 33, 222, 0.5)');
   lineGrad.addColorStop(1, 'transparent');
   ctx.strokeStyle = lineGrad;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(w * 0.2, h * 0.44);
-  ctx.lineTo(w * 0.8, h * 0.44);
+  ctx.moveTo(w * 0.2, h * 0.40);
+  ctx.lineTo(w * 0.8, h * 0.40);
   ctx.stroke();
 
   // Press any key
   ctx.font = '600 13px "Orbitron", "Press Start 2P", sans-serif';
   ctx.fillStyle = '#4488ff';
-  ctx.shadowColor = '#6699ff';
-  ctx.shadowBlur = 12;
   const alpha = 0.4 + Math.sin(Date.now() / 500) * 0.6;
   ctx.globalAlpha = Math.max(0, alpha);
   ctx.fillText('PRESS ANY KEY', w / 2, h * 0.52);
@@ -176,17 +154,9 @@ function drawTitleScreen(): void {
 
   // Controls hint
   ctx.font = '400 9px "Orbitron", sans-serif';
-  ctx.fillStyle = '#3a4566';
-  ctx.shadowBlur = 0;
+  ctx.fillStyle = '#555566';
   ctx.fillText('ARROW KEYS / WASD TO MOVE', w / 2, h * 0.70);
   ctx.fillText('EAT ALL DOTS TO WIN', w / 2, h * 0.70 + 20);
-
-  // Vignette on title
-  const vig = ctx.createRadialGradient(w / 2, h / 2, w * 0.2, w / 2, h / 2, w * 0.65);
-  vig.addColorStop(0, 'transparent');
-  vig.addColorStop(1, 'rgba(0, 0, 0, 0.5)');
-  ctx.fillStyle = vig;
-  ctx.fillRect(0, 0, w, h);
 
   ctx.restore();
 }
@@ -196,7 +166,7 @@ const originalOnRender = loop.onRender;
 loop.onRender = (interp: number) => {
   if (game.phase === GamePhase.MENU) {
     drawTitleScreen();
-    requestAnimationFrame(() => {}); // keep animating title
+    requestAnimationFrame(() => {});
     return;
   }
   originalOnRender(interp);

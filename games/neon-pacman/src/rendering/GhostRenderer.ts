@@ -47,27 +47,21 @@ export class GhostRenderer {
         ghost.frightenedTimer <= SCARED_FLASH_START;
       let bodyColor = FRIGHTENED_COLOR;
       let bodyLight = '#4444ff';
-      let glowColor = FRIGHTENED_COLOR;
 
       if (flashing && Math.floor(time * 6) % 2 === 0) {
         bodyColor = FRIGHTENED_FLASH;
         bodyLight = '#ffffff';
-        glowColor = FRIGHTENED_FLASH;
       }
 
-      this.drawBody(ctx, x, y, size, bodyColor, bodyLight, glowColor, time);
+      this.drawBody(ctx, x, y, size, bodyColor, bodyLight, time);
       this.drawFrightenedFace(ctx, x, y, size);
       return;
     }
 
-    const colors = GHOST_COLORS[ghost.name] ?? { body: '#aaaaaa', bodyLight: '#cccccc', glow: '#cccccc' };
-    this.drawBody(ctx, x, y, size, colors.body, colors.bodyLight, colors.glow, time);
+    const colors = GHOST_COLORS[ghost.name] ?? { body: '#aaaaaa', bodyLight: '#cccccc' };
+    this.drawBody(ctx, x, y, size, colors.body, colors.bodyLight, time);
     this.drawEyes(ctx, x, y, size, ghost.dir);
   }
-
-  // ---------------------------------------------------------------------------
-  // Body with gradient
-  // ---------------------------------------------------------------------------
 
   private drawBody(
     ctx: CanvasRenderingContext2D,
@@ -76,16 +70,11 @@ export class GhostRenderer {
     size: number,
     color: string,
     colorLight: string,
-    glowColor: string,
     time: number,
   ): void {
     const half = size / 2;
     const wobble = Math.sin(time * 8) * 1.5;
 
-    ctx.shadowColor = glowColor;
-    ctx.shadowBlur = 14;
-
-    // Build the ghost shape path
     const left = x - half;
     const right = x + half;
     const top = y - half;
@@ -112,35 +101,14 @@ export class GhostRenderer {
     ctx.lineTo(left, top + half);
     ctx.closePath();
 
-    // Gradient fill for a polished 3D look
+    // Gradient fill
     const grad = ctx.createLinearGradient(x, top, x, bottom);
     grad.addColorStop(0, colorLight);
     grad.addColorStop(0.4, color);
     grad.addColorStop(1, color);
     ctx.fillStyle = grad;
     ctx.fill();
-
-    // Subtle highlight on the dome
-    ctx.save();
-    ctx.clip();
-    ctx.globalAlpha = 0.15;
-    const highlight = ctx.createRadialGradient(
-      x - half * 0.2, top + half * 0.3, 0,
-      x, top + half * 0.5, half * 0.8,
-    );
-    highlight.addColorStop(0, '#ffffff');
-    highlight.addColorStop(1, 'transparent');
-    ctx.fillStyle = highlight;
-    ctx.fillRect(left, top, size, size);
-    ctx.globalAlpha = 1;
-    ctx.restore();
-
-    ctx.shadowBlur = 0;
   }
-
-  // ---------------------------------------------------------------------------
-  // Eyes
-  // ---------------------------------------------------------------------------
 
   private drawEyes(
     ctx: CanvasRenderingContext2D,
@@ -167,8 +135,6 @@ export class GhostRenderer {
       default: break;
     }
 
-    ctx.shadowBlur = 0;
-
     this.drawSingleEye(ctx, x - eyeOffsetX, eyeY, scleraRx, scleraRy, pupilR, px, py);
     this.drawSingleEye(ctx, x + eyeOffsetX, eyeY, scleraRx, scleraRy, pupilR, px, py);
   }
@@ -183,10 +149,8 @@ export class GhostRenderer {
     pupilDx: number,
     pupilDy: number,
   ): void {
-    // White sclera with slight glow
-    ctx.fillStyle = '#f0f4ff';
-    ctx.shadowColor = 'rgba(200, 220, 255, 0.3)';
-    ctx.shadowBlur = 3;
+    // White sclera
+    ctx.fillStyle = '#ffffff';
     ctx.beginPath();
     ctx.save();
     ctx.translate(cx, cy);
@@ -196,22 +160,11 @@ export class GhostRenderer {
     ctx.fill();
 
     // Dark pupil
-    ctx.shadowBlur = 0;
-    ctx.fillStyle = '#0a0a22';
+    ctx.fillStyle = '#000022';
     ctx.beginPath();
     ctx.arc(cx + pupilDx, cy + pupilDy, pupilR, 0, Math.PI * 2);
     ctx.fill();
-
-    // Tiny white highlight dot on pupil
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.beginPath();
-    ctx.arc(cx + pupilDx + pupilR * 0.3, cy + pupilDy - pupilR * 0.3, pupilR * 0.3, 0, Math.PI * 2);
-    ctx.fill();
   }
-
-  // ---------------------------------------------------------------------------
-  // Frightened face
-  // ---------------------------------------------------------------------------
 
   private drawFrightenedFace(
     ctx: CanvasRenderingContext2D,

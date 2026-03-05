@@ -1,5 +1,5 @@
 import { Direction, Vec2 } from '../types';
-import { TILE_SIZE, PACMAN_COLOR, PACMAN_COLOR_LIGHT, PACMAN_GLOW } from '../constants';
+import { TILE_SIZE, PACMAN_COLOR, PACMAN_COLOR_LIGHT } from '../constants';
 
 interface PacmanLike {
   readonly pos: Vec2;
@@ -23,8 +23,6 @@ export class PacmanRenderer {
       return;
     }
 
-    this.renderTrail(ctx, pacman.trail);
-
     if (deathProgress !== undefined && deathProgress >= 0) {
       this.renderDeath(ctx, pacman, deathProgress);
       return;
@@ -40,11 +38,7 @@ export class PacmanRenderer {
     const { x, y } = pacman.pos;
     const r = PacmanRenderer.RADIUS;
 
-    // Outer glow
-    ctx.shadowColor = PACMAN_GLOW;
-    ctx.shadowBlur = 24;
-
-    // Radial gradient fill for a 3D-ish look
+    // Radial gradient fill
     const grad = ctx.createRadialGradient(x - r * 0.2, y - r * 0.3, r * 0.1, x, y, r);
     grad.addColorStop(0, PACMAN_COLOR_LIGHT);
     grad.addColorStop(0.6, PACMAN_COLOR);
@@ -56,41 +50,7 @@ export class PacmanRenderer {
     ctx.arc(x, y, r, startAngle, endAngle);
     ctx.closePath();
     ctx.fill();
-
-    ctx.shadowBlur = 0;
   }
-
-  // ---------------------------------------------------------------------------
-  // Trail
-  // ---------------------------------------------------------------------------
-
-  private renderTrail(ctx: CanvasRenderingContext2D, trail: Vec2[]): void {
-    if (trail.length === 0) return;
-
-    const maxLen = 8;
-    const count = Math.min(trail.length, maxLen);
-
-    ctx.shadowBlur = 0;
-
-    for (let i = 0; i < count; i++) {
-      const t = i / (maxLen - 1);
-      const alpha = 0.25 * (1 - t) + 0.01 * t;
-      const radius = PacmanRenderer.RADIUS * (1 - t * 0.65);
-
-      ctx.globalAlpha = alpha;
-      ctx.fillStyle = PACMAN_GLOW;
-
-      ctx.beginPath();
-      ctx.arc(trail[i].x, trail[i].y, radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.globalAlpha = 1;
-  }
-
-  // ---------------------------------------------------------------------------
-  // Death animation
-  // ---------------------------------------------------------------------------
 
   private renderDeath(
     ctx: CanvasRenderingContext2D,
@@ -110,8 +70,6 @@ export class PacmanRenderer {
 
     const { x, y } = pacman.pos;
 
-    ctx.shadowColor = PACMAN_GLOW;
-    ctx.shadowBlur = 20 * (1 - progress);
     ctx.fillStyle = PACMAN_COLOR;
     ctx.globalAlpha = 1 - progress * 0.4;
 
@@ -122,12 +80,7 @@ export class PacmanRenderer {
     ctx.fill();
 
     ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
   }
-
-  // ---------------------------------------------------------------------------
-  // Helpers
-  // ---------------------------------------------------------------------------
 
   private static mouthAngles(
     dir: Direction,

@@ -1,9 +1,9 @@
 {
   "id": "chess",
-  "name": "Neon Chess",
-  "description": "Classic chess with neon cyberpunk visuals. Challenge the AI or play with a friend.",
+  "name": "Chess",
+  "description": "Classic chess with clean traditional visuals. Challenge the AI or play with a friend.",
   "category": "strategy",
-  "tags": ["strategy", "classic", "single-player", "two-player", "chess", "neon"],
+  "tags": ["strategy", "classic", "single-player", "two-player", "chess"],
   "thumbnail": "/thumbnails/chess.png",
   "entry": "index.html",
   "multiplayer": {

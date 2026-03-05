@@ -2,38 +2,19 @@ import { Layout } from '../world/Layout';
 import {
   TILE_SIZE,
   WALL_COLOR,
-  WALL_GLOW,
-  WALL_INNER,
   WALL_FILL,
   DOT_COLOR,
-  DOT_GLOW,
   CAPSULE_COLOR,
   CAPSULE_GLOW,
 } from '../constants';
 
-/**
- * Renders the maze background: walls with neon glow outlines, food dots
- * with gentle pulse, and power capsules with strong pulsing glow.
- *
- * Wall geometry is cached to an offscreen canvas since it never changes
- * during a level. Only food and capsules are redrawn per frame.
- */
 export class MazeRenderer {
-  /** Offscreen canvas caching the static wall artwork. */
   private wallCanvas: HTMLCanvasElement | null = null;
 
-  /**
-   * Invalidate the cached wall canvas. Call this whenever the layout
-   * changes (e.g. new level loaded) so walls are re-rendered on the
-   * next frame.
-   */
   invalidate(): void {
     this.wallCanvas = null;
   }
 
-  /**
-   * Render the full maze: cached walls, then live food and capsules.
-   */
   render(ctx: CanvasRenderingContext2D, layout: Layout, time: number): void {
     if (!this.wallCanvas) {
       this.wallCanvas = document.createElement('canvas');
@@ -50,14 +31,10 @@ export class MazeRenderer {
     this.renderCapsules(ctx, layout, time);
   }
 
-  // ---------------------------------------------------------------------------
-  // Wall rendering (drawn once, cached)
-  // ---------------------------------------------------------------------------
-
   private renderWalls(ctx: CanvasRenderingContext2D, layout: Layout): void {
     const T = TILE_SIZE;
 
-    // --- Pass 1: fill all wall interiors with subtle gradient ---
+    // Fill wall interiors
     for (let col = 0; col < layout.width; col++) {
       for (let row = 0; row < layout.height; row++) {
         if (!layout.isWall(col, row)) continue;
@@ -66,53 +43,21 @@ export class MazeRenderer {
       }
     }
 
-    // --- Pass 2: soft outer glow (wide, low opacity) ---
-    ctx.strokeStyle = WALL_GLOW;
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.shadowColor = WALL_GLOW;
-    ctx.shadowBlur = 25;
-    ctx.globalAlpha = 0.4;
-
-    this.strokeWallEdges(ctx, layout, T);
-
-    ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
-
-    // --- Pass 3: bright inner line ---
+    // Wall edges - single clean pass
     ctx.strokeStyle = WALL_COLOR;
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.shadowColor = WALL_COLOR;
-    ctx.shadowBlur = 10;
 
     this.strokeWallEdges(ctx, layout, T);
-
-    // --- Pass 4: sharp bright edge highlight ---
-    ctx.strokeStyle = WALL_INNER;
-    ctx.lineWidth = 1;
-    ctx.shadowColor = WALL_GLOW;
-    ctx.shadowBlur = 4;
-    ctx.globalAlpha = 0.6;
-
-    this.strokeWallEdges(ctx, layout, T);
-
-    ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
   }
 
-  /**
-   * Stroke all exposed wall edges and inner-corner arcs.
-   * Extracted to avoid duplicating the iteration logic across passes.
-   */
   private strokeWallEdges(
     ctx: CanvasRenderingContext2D,
     layout: Layout,
     T: number,
   ): void {
-    const r = 5; // corner radius
+    const r = 5;
 
     for (let col = 0; col < layout.width; col++) {
       for (let row = 0; row < layout.height; row++) {
@@ -147,7 +92,7 @@ export class MazeRenderer {
           ctx.stroke();
         }
 
-        // Inner-corner arcs
+        // Corner arcs
         if (!conn.n && !conn.w) {
           ctx.beginPath();
           ctx.arc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
@@ -172,43 +117,15 @@ export class MazeRenderer {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Food dots
-  // ---------------------------------------------------------------------------
-
   private renderFood(
     ctx: CanvasRenderingContext2D,
     layout: Layout,
-    time: number,
+    _time: number,
   ): void {
     const T = TILE_SIZE;
-    const baseRadius = T * 0.1;
-    const pulse = Math.sin(time * 3) * 0.3;
-    const radius = baseRadius + pulse;
+    const radius = T * 0.1;
 
-    // Soft glow layer
-    ctx.fillStyle = DOT_GLOW;
-    ctx.shadowColor = DOT_GLOW;
-    ctx.shadowBlur = 8;
-    ctx.globalAlpha = 0.3;
-
-    ctx.beginPath();
-    for (let col = 0; col < layout.width; col++) {
-      for (let row = 0; row < layout.height; row++) {
-        if (!layout.hasFood(col, row)) continue;
-        const cx = col * T + T / 2;
-        const cy = row * T + T / 2;
-        ctx.moveTo(cx + radius + 2, cy);
-        ctx.arc(cx, cy, radius + 2, 0, Math.PI * 2);
-      }
-    }
-    ctx.fill();
-
-    // Solid dot
-    ctx.globalAlpha = 1;
     ctx.fillStyle = DOT_COLOR;
-    ctx.shadowColor = DOT_COLOR;
-    ctx.shadowBlur = 6;
 
     ctx.beginPath();
     for (let col = 0; col < layout.width; col++) {
@@ -221,13 +138,7 @@ export class MazeRenderer {
       }
     }
     ctx.fill();
-
-    ctx.shadowBlur = 0;
   }
-
-  // ---------------------------------------------------------------------------
-  // Power capsules
-  // ---------------------------------------------------------------------------
 
   private renderCapsules(
     ctx: CanvasRenderingContext2D,
@@ -238,46 +149,19 @@ export class MazeRenderer {
 
     const T = TILE_SIZE;
     const baseRadius = T * 0.3;
-    const pulse = Math.sin(time * 4) * 2;
-    const radius = baseRadius + pulse;
+    // Pulsing blink effect
+    const visible = Math.sin(time * 4) > -0.3;
+    if (!visible) return;
 
-    // Outer glow halo (additive)
-    const prevComposite = ctx.globalCompositeOperation;
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.shadowColor = CAPSULE_GLOW;
-    ctx.shadowBlur = 22;
-    ctx.fillStyle = CAPSULE_GLOW;
-    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = CAPSULE_COLOR;
 
     for (const cap of layout.capsules) {
       const cx = cap.col * T + T / 2;
       const cy = cap.row * T + T / 2;
+
       ctx.beginPath();
-      ctx.arc(cx, cy, radius + 4, 0, Math.PI * 2);
+      ctx.arc(cx, cy, baseRadius, 0, Math.PI * 2);
       ctx.fill();
     }
-
-    ctx.globalAlpha = 1;
-    ctx.globalCompositeOperation = prevComposite;
-
-    // Solid capsule with radial gradient
-    for (const cap of layout.capsules) {
-      const cx = cap.col * T + T / 2;
-      const cy = cap.row * T + T / 2;
-
-      const grad = ctx.createRadialGradient(cx - 1, cy - 2, 0, cx, cy, radius);
-      grad.addColorStop(0, '#ffffff');
-      grad.addColorStop(0.5, '#ffddee');
-      grad.addColorStop(1, CAPSULE_GLOW);
-
-      ctx.shadowColor = CAPSULE_GLOW;
-      ctx.shadowBlur = 16;
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    ctx.shadowBlur = 0;
   }
 }

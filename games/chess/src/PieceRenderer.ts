@@ -1,5 +1,3 @@
-import { colors } from '@gamevault/neon-theme/colors';
-import { drawNeonText } from '@gamevault/neon-theme/canvas/text';
 import { CELL_SIZE, LABEL_PADDING, coordsFromSquare } from './Board';
 import type { Color, PieceSymbol, Square } from 'chess.js';
 
@@ -9,10 +7,9 @@ const PIECE_SYMBOLS: Record<Color, Record<PieceSymbol, string>> = {
   b: { k: '\u265A', q: '\u265B', r: '\u265C', b: '\u265D', n: '\u265E', p: '\u265F' },
 };
 
-// White pieces = cyan, Black pieces = pink
-const PIECE_COLORS: Record<Color, { fill: string; glow: string }> = {
-  w: { fill: colors.neonCyan, glow: colors.neonCyanGlow },
-  b: { fill: colors.neonPink, glow: colors.neonPinkGlow },
+const PIECE_COLORS: Record<Color, { fill: string; stroke: string }> = {
+  w: { fill: '#ffffff', stroke: '#333333' },
+  b: { fill: '#1a1a1a', stroke: '#000000' },
 };
 
 interface FadeAnimation {
@@ -30,11 +27,30 @@ export function triggerCaptureFade(square: Square, color: Color, piece: PieceSym
 
 export function updateFadeAnimations(dt: number): void {
   for (let i = fadeAnimations.length - 1; i >= 0; i--) {
-    fadeAnimations[i].alpha -= dt * 4; // fade over ~250ms
+    fadeAnimations[i].alpha -= dt * 4;
     if (fadeAnimations[i].alpha <= 0) {
       fadeAnimations.splice(i, 1);
     }
   }
+}
+
+function drawPieceText(
+  ctx: CanvasRenderingContext2D,
+  symbol: string,
+  x: number,
+  y: number,
+  fill: string,
+  stroke: string,
+  fontSize: number,
+): void {
+  ctx.font = `${fontSize}px serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = stroke;
+  ctx.strokeText(symbol, x, y);
+  ctx.fillStyle = fill;
+  ctx.fillText(symbol, x, y);
 }
 
 export function drawPieces(
@@ -53,7 +69,7 @@ export function drawPieces(
       const symbol = PIECE_SYMBOLS[cell.color][cell.type];
       const c = PIECE_COLORS[cell.color];
 
-      drawNeonText(ctx, symbol, x, y, c.fill, c.glow, fontSize, 'serif');
+      drawPieceText(ctx, symbol, x, y, c.fill, c.stroke, fontSize);
     }
   }
 
@@ -67,7 +83,7 @@ export function drawPieces(
 
     ctx.save();
     ctx.globalAlpha = anim.alpha;
-    drawNeonText(ctx, symbol, x, y, c.fill, c.glow, fontSize, 'serif');
+    drawPieceText(ctx, symbol, x, y, c.fill, c.stroke, fontSize);
     ctx.restore();
   }
 }

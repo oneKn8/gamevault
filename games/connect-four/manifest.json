@@ -3,7 +3,7 @@
   "name": "Connect Four",
   "description": "Drop discs to connect four in a row. Play against a smart AI opponent.",
   "category": "strategy",
-  "tags": ["strategy", "classic", "single-player", "two-player", "neon"],
+  "tags": ["strategy", "classic", "single-player", "two-player"],
   "thumbnail": "/thumbnails/connect-four.png",
   "entry": "index.html",
   "multiplayer": {

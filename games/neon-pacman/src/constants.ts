@@ -37,29 +37,25 @@ export const SCATTER_CHASE_CYCLE = [
   { scatter: 5, chase: Infinity },
 ];
 
-// Colors
-export const BG_COLOR = '#05050f';
-export const WALL_COLOR = '#0066ff';
-export const WALL_GLOW = '#3399ff';
-export const WALL_INNER = '#0044aa';
-export const WALL_FILL = '#060614';
-export const DOT_COLOR = '#ffeedd';
-export const DOT_GLOW = '#ffcc88';
+// Colors - modern clean palette
+export const BG_COLOR = '#000000';
+export const WALL_COLOR = '#2121de';
+export const WALL_FILL = '#000010';
+export const DOT_COLOR = '#ffb897';
 export const CAPSULE_COLOR = '#ffffff';
-export const CAPSULE_GLOW = '#ff88ff';
-export const PACMAN_COLOR = '#ffe000';
-export const PACMAN_COLOR_LIGHT = '#fff176';
-export const PACMAN_GLOW = '#ffee55';
-export const HUD_COLOR = '#e0e8ff';
-export const HUD_LABEL = '#5577aa';
-export const HUD_DIM = '#667799';
+export const CAPSULE_GLOW = '#ffb897';
+export const PACMAN_COLOR = '#ffcc00';
+export const PACMAN_COLOR_LIGHT = '#ffe066';
+export const HUD_COLOR = '#ffffff';
+export const HUD_LABEL = '#8888aa';
+export const HUD_DIM = '#666688';
 
-export const GHOST_COLORS: Record<string, { body: string; bodyLight: string; glow: string }> = {
-  blinky: { body: '#ff1a1a', bodyLight: '#ff6655', glow: '#ff4444' },
-  pinky: { body: '#ff77cc', bodyLight: '#ffaadd', glow: '#ff99dd' },
-  inky: { body: '#00ddff', bodyLight: '#66eeff', glow: '#33eeff' },
-  clyde: { body: '#ffaa33', bodyLight: '#ffcc77', glow: '#ffbb55' },
+export const GHOST_COLORS: Record<string, { body: string; bodyLight: string }> = {
+  blinky: { body: '#ff0000', bodyLight: '#ff6655' },
+  pinky: { body: '#ffb8ff', bodyLight: '#ffddee' },
+  inky: { body: '#00ffff', bodyLight: '#88ffff' },
+  clyde: { body: '#ffb852', bodyLight: '#ffdd99' },
 };
 
-export const FRIGHTENED_COLOR = '#1a1aff';
+export const FRIGHTENED_COLOR = '#2121de';
 export const FRIGHTENED_FLASH = '#ffffff';

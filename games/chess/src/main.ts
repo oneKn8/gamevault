@@ -1,7 +1,4 @@
 import { GameVault } from '@gamevault/game-sdk/client';
-import { colors } from '@gamevault/neon-theme/colors';
-import { drawVignette } from '@gamevault/neon-theme/canvas/glow';
-import { drawNeonText } from '@gamevault/neon-theme/canvas/text';
 import { drawBoard, CANVAS_WIDTH, CANVAS_HEIGHT } from './Board';
 import { drawPieces, updateFadeAnimations } from './PieceRenderer';
 import { GameController, type GameResult } from './GameController';
@@ -77,6 +74,22 @@ document.addEventListener('keydown', (e: KeyboardEvent) => {
   }
 });
 
+// Helper text drawing
+function drawText(
+  text: string,
+  x: number,
+  y: number,
+  color: string,
+  fontSize: number,
+  font: string = 'Orbitron',
+): void {
+  ctx.font = `${fontSize}px ${font}`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = color;
+  ctx.fillText(text, x, y);
+}
+
 // Game loop
 let lastTime = 0;
 
@@ -100,7 +113,7 @@ function drawGame(): void {
   const h = canvas.height;
 
   // Clear
-  ctx.fillStyle = colors.bg;
+  ctx.fillStyle = '#2b2117';
   ctx.fillRect(0, 0, w, h);
 
   // Draw the board
@@ -110,49 +123,37 @@ function drawGame(): void {
   const board = controller.chess.board();
   drawPieces(ctx, board);
 
-  // Check indicator: flash the king square
+  // Check indicator: red tint on king square
   if (controller.isCheck && controller.gameResult === 'playing') {
     const kingSquares = controller.chess.findPiece({ type: 'k', color: controller.currentTurn });
     if (kingSquares.length > 0) {
-      const { col, row } = coordsFromSquareImport(kingSquares[0]);
-      const kx = 28 + col * 64 + 32; // LABEL_PADDING + col * CELL_SIZE + CELL_SIZE/2
-      const ky = 28 + row * 64 + 32;
-      ctx.save();
-      ctx.shadowColor = colors.neonRed;
-      ctx.shadowBlur = 20 + Math.sin(Date.now() / 200) * 8;
-      ctx.fillStyle = 'rgba(255, 26, 26, 0.2)';
-      ctx.beginPath();
-      ctx.arc(kx, ky, 30, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+      const file = kingSquares[0].charCodeAt(0) - 97;
+      const rank = 8 - parseInt(kingSquares[0][1], 10);
+      const kx = 28 + file * 64;
+      const ky = 28 + rank * 64;
+      ctx.fillStyle = 'rgba(255, 0, 0, 0.35)';
+      ctx.fillRect(kx, ky, 64, 64);
     }
   }
 
-  // Vignette
-  drawVignette(ctx, CANVAS_WIDTH, CANVAS_HEIGHT, 0.3);
-
   // Status bar
   const statusY = CANVAS_HEIGHT;
-  ctx.fillStyle = '#030310';
+  ctx.fillStyle = '#1a140e';
   ctx.fillRect(0, statusY, w, STATUS_HEIGHT);
 
-  const statusColor = controller.gameResult === 'checkmate-win' ? colors.neonGreen
-    : controller.gameResult === 'checkmate-loss' ? colors.neonRed
-    : controller.isCheck ? colors.neonYellow
-    : colors.hudText;
-  const statusGlow = controller.gameResult === 'checkmate-win' ? colors.neonGreenGlow
-    : controller.gameResult === 'checkmate-loss' ? colors.neonRedGlow
-    : controller.isCheck ? colors.neonYellowGlow
-    : colors.neonBlueGlow;
+  const statusColor = controller.gameResult === 'checkmate-win' ? '#4caf50'
+    : controller.gameResult === 'checkmate-loss' ? '#e53935'
+    : controller.isCheck ? '#ff9800'
+    : '#d4c4a8';
 
-  drawNeonText(ctx, controller.statusText, w / 2, statusY + STATUS_HEIGHT / 2, statusColor, statusGlow, 11, '"Press Start 2P"');
+  drawText(controller.statusText, w / 2, statusY + STATUS_HEIGHT / 2, statusColor, 11, '"Press Start 2P"');
 
   // Restart hint when game is over
   if (controller.gameResult !== 'playing') {
     const alpha = 0.4 + Math.sin(Date.now() / 500) * 0.4;
     ctx.save();
     ctx.globalAlpha = Math.max(0, alpha);
-    drawNeonText(ctx, 'PRESS R TO RESTART', w / 2, statusY + STATUS_HEIGHT / 2 + 16, colors.hudDim, 'rgba(102,119,153,0.3)', 7, 'Orbitron');
+    drawText('PRESS R TO RESTART', w / 2, statusY + STATUS_HEIGHT / 2 + 16, '#8b7355', 7);
     ctx.restore();
   }
 }
@@ -162,59 +163,49 @@ function drawTitleScreen(): void {
   const h = canvas.height;
 
   // Background
-  ctx.fillStyle = '#020208';
+  ctx.fillStyle = '#1a140e';
   ctx.fillRect(0, 0, w, h);
 
   const bgGrad = ctx.createRadialGradient(w / 2, h * 0.35, 0, w / 2, h * 0.35, w * 0.5);
-  bgGrad.addColorStop(0, 'rgba(20, 10, 60, 0.4)');
+  bgGrad.addColorStop(0, 'rgba(60, 45, 25, 0.3)');
   bgGrad.addColorStop(1, 'transparent');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, w, h);
 
-  // Title - NEON
-  drawNeonText(ctx, 'NEON', w / 2, h * 0.28, colors.neonYellow, colors.neonYellowGlow, 36, '"Orbitron"');
-
-  // Title - CHESS
-  drawNeonText(ctx, 'CHESS', w / 2, h * 0.28 + 42, colors.neonBlue, colors.neonBlueGlow, 28, '"Orbitron"');
+  // Title
+  drawText('CHESS', w / 2, h * 0.30, '#d4c4a8', 36, '"Orbitron"');
 
   // Decorative line
   ctx.save();
-  ctx.shadowBlur = 0;
   const lineGrad = ctx.createLinearGradient(w * 0.2, 0, w * 0.8, 0);
   lineGrad.addColorStop(0, 'transparent');
-  lineGrad.addColorStop(0.5, 'rgba(60, 120, 255, 0.5)');
+  lineGrad.addColorStop(0.5, 'rgba(180, 140, 80, 0.5)');
   lineGrad.addColorStop(1, 'transparent');
   ctx.strokeStyle = lineGrad;
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(w * 0.2, h * 0.44);
-  ctx.lineTo(w * 0.8, h * 0.44);
+  ctx.moveTo(w * 0.2, h * 0.40);
+  ctx.lineTo(w * 0.8, h * 0.40);
   ctx.stroke();
   ctx.restore();
 
   // Chess piece decoration
-  drawNeonText(ctx, '\u265A \u2655', w / 2, h * 0.54, colors.neonCyan, colors.neonCyanGlow, 32, 'serif');
+  ctx.font = '32px serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#d4c4a8';
+  ctx.fillText('\u265A \u2655', w / 2, h * 0.52);
 
   // Press any key
   const alpha = 0.4 + Math.sin(Date.now() / 500) * 0.6;
   ctx.save();
   ctx.globalAlpha = Math.max(0, alpha);
-  drawNeonText(ctx, 'CLICK TO PLAY', w / 2, h * 0.68, colors.neonBlue, colors.neonBlueGlow, 13, '"Orbitron"');
+  drawText('CLICK TO PLAY', w / 2, h * 0.66, '#b49860', 13, '"Orbitron"');
   ctx.restore();
 
   // Controls hint
-  drawNeonText(ctx, 'CLICK TO SELECT AND MOVE PIECES', w / 2, h * 0.80, colors.hudDim, 'rgba(102,119,153,0.3)', 8, 'Orbitron');
-  drawNeonText(ctx, 'PRESS R TO RESTART', w / 2, h * 0.80 + 18, colors.hudDim, 'rgba(102,119,153,0.3)', 8, 'Orbitron');
-
-  // Vignette
-  drawVignette(ctx, w, h, 0.5);
-}
-
-// Helper to avoid circular import - inline coords calculation
-function coordsFromSquareImport(sq: string): { col: number; row: number } {
-  const file = sq.charCodeAt(0) - 97;
-  const rank = 8 - parseInt(sq[1], 10);
-  return { col: file, row: rank };
+  drawText('CLICK TO SELECT AND MOVE PIECES', w / 2, h * 0.78, '#6b5a42', 8);
+  drawText('PRESS R TO RESTART', w / 2, h * 0.78 + 18, '#6b5a42', 8);
 }
 
 // Start the game loop
