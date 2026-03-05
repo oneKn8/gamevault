@@ -99,10 +99,7 @@ function gameLoop(now: number): void {
   const board = controller.getBoard();
   const phase = controller.getPhase();
 
-  if (settingsScreen.isVisible()) {
-    settingsScreen.draw();
-  }
-
+  // HUD clears the overlay canvas, so draw it first, then settings on top
   const territoryCounts = board ? board.getTerritoryCounts() : new Map<PlayerID, number>();
   const totalTiles = board ? board.getTotalPlayableTiles() : 0;
   const winTarget = board ? board.settings.winTarget : 60;
@@ -120,6 +117,10 @@ function gameLoop(now: number): void {
     controller.getSelectedPieceId(),
     controller.getUnplannedCount(),
   );
+
+  if (settingsScreen.isVisible()) {
+    settingsScreen.draw();
+  }
 
   requestAnimationFrame(gameLoop);
 }
