@@ -19,6 +19,7 @@ export function GameCard({ game }: { game: GameManifest }) {
   return (
     <Link
       href={`/games/${game.id}`}
+      aria-label={game.name}
       className="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-bg-raised transition-all duration-300 ease-out hover:-translate-y-1 hover:border-border-highlight hover:shadow-lg hover:shadow-accent/5"
     >
       {/* Cover art */}

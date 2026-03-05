@@ -46,11 +46,13 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
   return (
     <div className="rounded-lg border border-border bg-bg-raised p-4">
       {/* Period tabs */}
-      <div className="mb-4 flex gap-2">
+      <div className="mb-4 flex gap-2" role="tablist">
         {periods.map((p) => (
           <button
             key={p.key}
             onClick={() => setPeriod(p.key)}
+            role="tab"
+            aria-selected={period === p.key}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
               period === p.key
                 ? "bg-accent/20 text-accent"

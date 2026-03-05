@@ -44,9 +44,9 @@ export function HeroCarousel({ games }: { games: GameManifest[] }) {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="flex min-h-[420px]">
+      <div className="flex min-h-[280px] sm:min-h-[360px] md:min-h-[420px]">
         {/* Main content area */}
-        <div className="relative flex flex-1 items-end p-8">
+        <div className="relative flex flex-1 items-end p-4 sm:p-6 md:p-8">
           {/* Background cover art */}
           {games.map((g, i) => (
             <div
@@ -65,7 +65,7 @@ export function HeroCarousel({ games }: { games: GameManifest[] }) {
             <span className={`mb-3 inline-block rounded-full px-3 py-1 text-xs font-semibold uppercase ${catClass}`}>
               {game.category}
             </span>
-            <h2 className="mb-2 text-4xl font-bold text-text">{game.name}</h2>
+            <h2 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold text-text">{game.name}</h2>
             <p className="mb-6 text-sm leading-relaxed text-text-secondary">
               {descriptions[game.id] || game.description}
             </p>
@@ -84,6 +84,7 @@ export function HeroCarousel({ games }: { games: GameManifest[] }) {
             <button
               key={g.id}
               onClick={() => setActive(i)}
+              aria-label={`Show ${g.name}`}
               className={`overflow-hidden rounded-lg border-2 transition-all ${
                 i === active
                   ? "border-accent shadow-md shadow-accent/20"
@@ -102,6 +103,7 @@ export function HeroCarousel({ games }: { games: GameManifest[] }) {
           <button
             key={g.id}
             onClick={() => setActive(i)}
+            aria-label={`Go to ${g.name}`}
             className={`h-1.5 rounded-full transition-all ${
               i === active ? "w-8 bg-accent" : "w-4 bg-text-muted/40"
             }`}

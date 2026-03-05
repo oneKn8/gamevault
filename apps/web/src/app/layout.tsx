@@ -72,7 +72,7 @@ export default function RootLayout({
       >
         <Providers>
           <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
-            <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+            <nav aria-label="Main navigation" className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
               <a href="/" className="flex items-center gap-1">
                 <span className="text-xl font-bold tracking-wider text-text">
                   GAME
@@ -81,16 +81,16 @@ export default function RootLayout({
                   VAULT
                 </span>
               </a>
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-3 sm:gap-6">
                 <a
                   href="/games"
-                  className="text-sm text-text-secondary transition-colors hover:text-text"
+                  className="text-xs sm:text-sm text-text-secondary transition-colors hover:text-text"
                 >
                   Games
                 </a>
                 <a
                   href="/leaderboards"
-                  className="text-sm text-text-secondary transition-colors hover:text-text"
+                  className="text-xs sm:text-sm text-text-secondary transition-colors hover:text-text"
                 >
                   Leaderboards
                 </a>

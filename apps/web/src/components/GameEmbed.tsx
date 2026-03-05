@@ -97,7 +97,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
       <div className="flex h-10 shrink-0 items-center justify-between border-b border-border bg-bg-raised px-4">
         <a
           href={`/games/${gameId}`}
-          className="text-xs text-text-muted hover:text-text"
+          className="text-[10px] sm:text-xs text-text-muted hover:text-text"
         >
           &larr; {gameName}
         </a>
@@ -105,6 +105,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
           {/* Pause / Resume */}
           <button
             onClick={togglePause}
+            aria-label={paused ? "Resume" : "Pause"}
             title={paused ? "Resume" : "Pause"}
             className="rounded p-1.5 text-text-muted hover:bg-bg hover:text-text"
           >
@@ -123,6 +124,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
           {/* Mute / Unmute */}
           <button
             onClick={toggleMute}
+            aria-label={muted ? "Unmute" : "Mute"}
             title={muted ? "Unmute" : "Mute"}
             className="rounded p-1.5 text-text-muted hover:bg-bg hover:text-text"
           >
@@ -144,6 +146,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
           {/* Fullscreen */}
           <button
             onClick={enterFullscreen}
+            aria-label="Fullscreen"
             title="Fullscreen"
             className="rounded p-1.5 text-text-muted hover:bg-bg hover:text-text"
           >
@@ -158,6 +161,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
           {/* Quit */}
           <button
             onClick={onQuit}
+            aria-label="Quit"
             title="Quit"
             className="rounded p-1.5 text-text-muted hover:bg-bg hover:text-text"
           >

@@ -21,7 +21,7 @@ export function AuthButton() {
           {session.user.image && (
             <img
               src={session.user.image}
-              alt=""
+              alt={session.user.username ?? ""}
               className="h-7 w-7 rounded-full border border-border"
             />
           )}
@@ -32,6 +32,7 @@ export function AuthButton() {
         </a>
         <button
           onClick={() => signOut()}
+          aria-label="Sign out"
           className="rounded-md border border-border-highlight bg-transparent px-3 py-1 text-xs text-text-secondary transition-all hover:text-text hover:border-text-muted"
         >
           Sign Out
@@ -43,6 +44,7 @@ export function AuthButton() {
   return (
     <button
       onClick={() => signIn()}
+      aria-label="Sign in"
       className="rounded-md border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-accent-hover"
     >
       Sign In
