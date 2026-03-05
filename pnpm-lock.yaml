@@ -73,6 +73,41 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  games/chess:
+    dependencies:
+      '@gamevault/game-sdk':
+        specifier: workspace:*
+        version: link:../../packages/game-sdk
+      '@gamevault/neon-theme':
+        specifier: workspace:*
+        version: link:../../packages/neon-theme
+      chess.js:
+        specifier: ^1.0.0-beta.8
+        version: 1.4.0
+    devDependencies:
+      esbuild:
+        specifier: ^0.24.0
+        version: 0.24.2
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  games/connect-four:
+    dependencies:
+      '@gamevault/game-sdk':
+        specifier: workspace:*
+        version: link:../../packages/game-sdk
+      '@gamevault/neon-theme':
+        specifier: workspace:*
+        version: link:../../packages/neon-theme
+    devDependencies:
+      esbuild:
+        specifier: ^0.24.0
+        version: 0.24.2
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   games/neon-pacman:
     dependencies:
       '@gamevault/game-sdk':
@@ -1395,6 +1430,9 @@ packages:
   chalk@4.1.2:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
+
+  chess.js@1.4.0:
+    resolution: {integrity: sha512-BBJgrrtKQOzFLonR0l+k64A98NLemPwNsCskwb+29bRwobUa4iTm51E1kwGPbWXAcfdDa18nad6vpPPKPWarqw==}
 
   client-only@0.0.1:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
@@ -3770,6 +3808,8 @@ snapshots:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
+
+  chess.js@1.4.0: {}
 
   client-only@0.0.1: {}
 
