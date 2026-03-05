@@ -9,11 +9,12 @@ GameVault.init();
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
-canvas.width = CANVAS_WIDTH;
-canvas.height = CANVAS_HEIGHT;
-
-// Scale to fit viewport
 function sizeCanvas(): void {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = CANVAS_WIDTH * dpr;
+  canvas.height = CANVAS_HEIGHT * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
   const maxW = window.innerWidth - 40;
   const maxH = window.innerHeight - 40;
   const scale = Math.min(maxW / CANVAS_WIDTH, maxH / CANVAS_HEIGHT, 2);
@@ -68,7 +69,7 @@ canvas.addEventListener('click', (e) => {
     return;
   }
 
-  if (gamePhase === 'playing' && currentPlayer === 1 && !aiThinking) {
+  if (gamePhase === 'playing' && currentPlayer === 1 && !aiThinking && !renderer.isAnimating) {
     const col = getColumnFromMouse(e);
     if (col < 0) return;
     playerMove(col);
@@ -102,6 +103,7 @@ function resetGame(): void {
 function playerMove(col: number): void {
   const result = board.dropDisc(col, 1);
   if (!result) return;
+  renderer.startDropAnimation(col, result.row, 1);
 
   // Check for player win
   const win = board.checkWin(1);
@@ -136,7 +138,9 @@ function aiMove(): void {
   const col = getBestMove(board, 5);
   if (col < 0) return;
 
-  board.dropDisc(col, 2);
+  const aiResult = board.dropDisc(col, 2);
+  if (!aiResult) return;
+  renderer.startDropAnimation(col, aiResult.row, 2);
 
   // Check for AI win
   const win = board.checkWin(2);

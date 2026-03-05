@@ -1,34 +1,35 @@
 import { GameVault } from '@gamevault/game-sdk/client';
 import { drawBoard, CANVAS_WIDTH, CANVAS_HEIGHT } from './Board';
-import { drawPieces, updateFadeAnimations } from './PieceRenderer';
+import { drawPieces, updateFadeAnimations, loadPieceImages, triggerMoveAnimation } from './PieceRenderer';
 import { GameController, type GameResult } from './GameController';
 
 // Initialize GameVault SDK
 GameVault.init();
+loadPieceImages();
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d')!;
 
-// Set canvas size
-canvas.width = CANVAS_WIDTH;
-canvas.height = CANVAS_HEIGHT;
+// Status bar height
+const STATUS_HEIGHT = 40;
 
-// Scale to fit viewport
+// Scale to fit viewport with DPR support
 function sizeCanvas(): void {
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = CANVAS_WIDTH * dpr;
+  canvas.height = (CANVAS_HEIGHT + STATUS_HEIGHT) * dpr;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
   const maxW = window.innerWidth - 40;
   const maxH = window.innerHeight - 80;
-  const scale = Math.min(maxW / CANVAS_WIDTH, maxH / CANVAS_HEIGHT, 2);
+  const scale = Math.min(maxW / CANVAS_WIDTH, maxH / (CANVAS_HEIGHT + STATUS_HEIGHT), 2);
   canvas.style.width = `${Math.floor(CANVAS_WIDTH * scale)}px`;
-  canvas.style.height = `${Math.floor(CANVAS_HEIGHT * scale)}px`;
+  canvas.style.height = `${Math.floor((CANVAS_HEIGHT + STATUS_HEIGHT) * scale)}px`;
 }
 sizeCanvas();
 window.addEventListener('resize', sizeCanvas);
 
 const controller = new GameController();
-
-// Status bar height
-const STATUS_HEIGHT = 40;
-canvas.height = CANVAS_HEIGHT + STATUS_HEIGHT;
 
 // Handle game over
 controller.setOnGameOver((result: GameResult) => {
@@ -54,8 +55,8 @@ canvas.addEventListener('click', (e: MouseEvent) => {
   }
 
   const rect = canvas.getBoundingClientRect();
-  const scaleX = canvas.width / rect.width;
-  const scaleY = canvas.height / rect.height;
+  const scaleX = CANVAS_WIDTH / rect.width;
+  const scaleY = (CANVAS_HEIGHT + STATUS_HEIGHT) / rect.height;
   const x = (e.clientX - rect.left) * scaleX;
   const y = (e.clientY - rect.top) * scaleY;
   controller.handleClick(x, y);
@@ -109,8 +110,8 @@ function gameLoop(timestamp: number): void {
 }
 
 function drawGame(): void {
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = CANVAS_WIDTH;
+  const h = CANVAS_HEIGHT + STATUS_HEIGHT;
 
   // Clear
   ctx.fillStyle = '#2b2117';
@@ -159,8 +160,8 @@ function drawGame(): void {
 }
 
 function drawTitleScreen(): void {
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = CANVAS_WIDTH;
+  const h = CANVAS_HEIGHT + STATUS_HEIGHT;
 
   // Background
   ctx.fillStyle = '#1a140e';

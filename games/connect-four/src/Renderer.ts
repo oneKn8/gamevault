@@ -19,8 +19,77 @@ export type GameStatus = 'playing' | 'player1-win' | 'player2-win' | 'draw' | 'm
 export class Renderer {
   private pulseTime = 0;
 
+  private droppingDisc: {
+    col: number;
+    targetRow: number;
+    currentY: number;
+    targetY: number;
+    player: 1 | 2;
+    velocity: number;
+    bounces: number;
+  } | null = null;
+
+  private particles: { x: number; y: number; vx: number; vy: number; color: string; life: number }[] = [];
+
+  startDropAnimation(col: number, row: number, player: 1 | 2): void {
+    const boardY = PADDING + HEADER_HEIGHT;
+    this.droppingDisc = {
+      col,
+      targetRow: row,
+      currentY: boardY - CELL_SIZE,
+      targetY: boardY + row * CELL_SIZE + CELL_SIZE / 2,
+      player,
+      velocity: 0,
+      bounces: 0,
+    };
+  }
+
+  get isAnimating(): boolean {
+    return this.droppingDisc !== null;
+  }
+
   update(dt: number): void {
     this.pulseTime += dt;
+
+    // Update drop animation
+    if (this.droppingDisc) {
+      const d = this.droppingDisc;
+      d.velocity += 2400 * dt; // gravity
+      d.currentY += d.velocity * dt;
+
+      if (d.currentY >= d.targetY) {
+        d.currentY = d.targetY;
+        d.velocity = -d.velocity * 0.35; // bounce damping
+        d.bounces++;
+
+        if (d.bounces >= 3 || Math.abs(d.velocity) < 30) {
+          // Emit landing particles
+          const color = d.player === 1 ? PLAYER1_COLOR : PLAYER2_COLOR;
+          for (let i = 0; i < 8; i++) {
+            const angle = (Math.PI * 2 * i) / 8 + Math.random() * 0.5;
+            this.particles.push({
+              x: PADDING + d.col * CELL_SIZE + CELL_SIZE / 2,
+              y: d.targetY,
+              vx: Math.cos(angle) * (80 + Math.random() * 60),
+              vy: Math.sin(angle) * (80 + Math.random() * 60) - 40,
+              color,
+              life: 1.0,
+            });
+          }
+          this.droppingDisc = null;
+        }
+      }
+    }
+
+    // Update particles
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      const p = this.particles[i];
+      p.x += p.vx * dt;
+      p.y += p.vy * dt;
+      p.vy += 300 * dt;
+      p.life -= dt * 2.5;
+      if (p.life <= 0) this.particles.splice(i, 1);
+    }
   }
 
   render(
@@ -49,6 +118,15 @@ export class Renderer {
 
     // Board fill - classic blue
     ctx.fillStyle = BOARD_BG;
+    ctx.beginPath();
+    ctx.roundRect(boardX - 4, boardY - 4, boardW + 8, boardH + 8, 12);
+    ctx.fill();
+
+    // Depth gradient overlay
+    const depthGrad = ctx.createLinearGradient(boardX, boardY, boardX, boardY + boardH);
+    depthGrad.addColorStop(0, 'rgba(255, 255, 255, 0.06)');
+    depthGrad.addColorStop(1, 'rgba(0, 0, 0, 0.15)');
+    ctx.fillStyle = depthGrad;
     ctx.beginPath();
     ctx.roundRect(boardX - 4, boardY - 4, boardW + 8, boardH + 8, 12);
     ctx.fill();
@@ -85,6 +163,15 @@ export class Renderer {
         const cy = boardY + r * CELL_SIZE + CELL_SIZE / 2;
 
         ctx.fillStyle = EMPTY_HOLE;
+        ctx.beginPath();
+        ctx.arc(cx, cy, DISC_RADIUS, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner shadow for recessed look
+        const shadowGrad = ctx.createRadialGradient(cx, cy, DISC_RADIUS * 0.6, cx, cy, DISC_RADIUS);
+        shadowGrad.addColorStop(0, 'transparent');
+        shadowGrad.addColorStop(1, 'rgba(0, 0, 0, 0.4)');
+        ctx.fillStyle = shadowGrad;
         ctx.beginPath();
         ctx.arc(cx, cy, DISC_RADIUS, 0, Math.PI * 2);
         ctx.fill();
@@ -137,15 +224,58 @@ export class Renderer {
         // Winning disc ring animation
         if (isWinDisc) {
           const ringAlpha = 0.4 + Math.sin(this.pulseTime * 6) * 0.3;
+          ctx.save();
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 3;
           ctx.globalAlpha = ringAlpha;
+          ctx.shadowColor = color;
+          ctx.shadowBlur = 15;
           ctx.beginPath();
           ctx.arc(cx, cy, DISC_RADIUS + 4, 0, Math.PI * 2);
           ctx.stroke();
-          ctx.globalAlpha = 1;
+          ctx.restore();
         }
       }
+    }
+
+    // Render dropping disc
+    if (this.droppingDisc) {
+      const d = this.droppingDisc;
+      const cx = PADDING + d.col * CELL_SIZE + CELL_SIZE / 2;
+      const cy = d.currentY;
+      const color = d.player === 1 ? PLAYER1_COLOR : PLAYER2_COLOR;
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.beginPath();
+      ctx.arc(cx + 2, cy + 2, DISC_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(cx, cy, DISC_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+
+      const innerGrad = ctx.createRadialGradient(
+        cx - DISC_RADIUS * 0.25, cy - DISC_RADIUS * 0.25, 0,
+        cx, cy, DISC_RADIUS,
+      );
+      innerGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+      innerGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = innerGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, DISC_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Render particles
+    for (const p of this.particles) {
+      ctx.save();
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
     }
   }
 
@@ -205,20 +335,27 @@ export class Renderer {
     const w = CANVAS_WIDTH;
     const h = CANVAS_HEIGHT;
 
-    ctx.fillStyle = '#f0f0f0';
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, '#e8e8e8');
+    bgGrad.addColorStop(1, '#d0d0d0');
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
     // Title
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
+    ctx.shadowColor = 'rgba(230, 57, 70, 0.4)';
+    ctx.shadowBlur = 15;
     ctx.font = '900 36px "Orbitron", sans-serif';
     ctx.fillStyle = PLAYER1_COLOR;
     ctx.fillText('CONNECT', w / 2, h * 0.28);
 
+    ctx.shadowColor = 'rgba(244, 211, 94, 0.4)';
     ctx.font = '900 32px "Orbitron", sans-serif';
     ctx.fillStyle = PLAYER2_COLOR;
     ctx.fillText('FOUR', w / 2, h * 0.28 + 46);
+    ctx.shadowBlur = 0;
 
     // Decorative line
     ctx.save();

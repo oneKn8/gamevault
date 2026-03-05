@@ -30,20 +30,6 @@ export default function HomePage() {
         <HeroCarousel games={games} />
       </section>
 
-      {/* Featured Games - horizontal scroll */}
-      {games.length > 0 && (
-        <section className="mb-12">
-          <h2 className="mb-4 text-lg font-semibold text-text">Featured</h2>
-          <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-2">
-            {games.map((game) => (
-              <div key={game.id} className="w-56 flex-shrink-0">
-                <GameCard game={game} />
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
       {/* All Games grid */}
       <section>
         <h2 className="mb-4 text-lg font-semibold text-text">All Games</h2>

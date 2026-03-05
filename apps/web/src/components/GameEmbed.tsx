@@ -15,6 +15,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const hostRef = useRef<GameHost | null>(null);
   const { data: session } = useSession();
+  const [isLoaded, setIsLoaded] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [paused, setPaused] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -25,6 +26,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
   };
 
   const handleLoad = useCallback(() => {
+    setIsLoaded(true);
     if (!iframeRef.current) return;
 
     const host = new GameHost({
@@ -175,6 +177,12 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
 
       {/* Game iframe */}
       <div className="relative min-h-0 flex-1">
+        {!isLoaded && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-text-muted border-t-accent" />
+            <p className="mt-3 text-sm text-text-muted">Loading game...</p>
+          </div>
+        )}
         <iframe
           ref={iframeRef}
           src={src}

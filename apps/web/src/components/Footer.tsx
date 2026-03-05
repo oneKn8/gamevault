@@ -1,31 +1,30 @@
 import Link from "next/link";
-
-const columns = [
-  {
-    title: "Games",
-    links: [
-      { label: "Pac-Man", href: "/games/neon-pacman" },
-      { label: "Connect Four", href: "/games/connect-four" },
-      { label: "Chess", href: "/games/chess" },
-    ],
-  },
-  {
-    title: "Community",
-    links: [
-      { label: "Leaderboards", href: "/leaderboards" },
-      { label: "GitHub", href: "https://github.com/oneKn8/gamevault" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "How to Play", href: "/games" },
-      { label: "Add a Game", href: "https://github.com/oneKn8/gamevault" },
-    ],
-  },
-];
+import { getGameManifests } from "@/lib/games";
 
 export function Footer() {
+  const games = getGameManifests();
+
+  const columns = [
+    {
+      title: "Games",
+      links: games.map((g) => ({ label: g.name, href: `/games/${g.id}` })),
+    },
+    {
+      title: "Community",
+      links: [
+        { label: "Leaderboards", href: "/leaderboards" },
+        { label: "GitHub", href: "https://github.com/oneKn8/gamevault" },
+      ],
+    },
+    {
+      title: "Resources",
+      links: [
+        { label: "How to Play", href: "/games" },
+        { label: "Add a Game", href: "https://github.com/oneKn8/gamevault" },
+      ],
+    },
+  ];
+
   return (
     <footer className="border-t border-border bg-bg-raised">
       <div className="mx-auto max-w-7xl px-4 py-12">

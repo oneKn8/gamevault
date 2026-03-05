@@ -89,6 +89,35 @@ export function drawBoard(
   ctx.lineWidth = 2;
   ctx.strokeRect(ox - 1, oy - 1, BOARD_SIZE + 2, BOARD_SIZE + 2);
 
+  // Subtle vignette on board edges
+  ctx.save();
+  const vigSize = 12;
+  // Top edge
+  const topGrad = ctx.createLinearGradient(ox, oy, ox, oy + vigSize);
+  topGrad.addColorStop(0, 'rgba(0, 0, 0, 0.12)');
+  topGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = topGrad;
+  ctx.fillRect(ox, oy, BOARD_SIZE, vigSize);
+  // Bottom edge
+  const botGrad = ctx.createLinearGradient(ox, oy + BOARD_SIZE - vigSize, ox, oy + BOARD_SIZE);
+  botGrad.addColorStop(0, 'transparent');
+  botGrad.addColorStop(1, 'rgba(0, 0, 0, 0.12)');
+  ctx.fillStyle = botGrad;
+  ctx.fillRect(ox, oy + BOARD_SIZE - vigSize, BOARD_SIZE, vigSize);
+  // Left edge
+  const leftGrad = ctx.createLinearGradient(ox, oy, ox + vigSize, oy);
+  leftGrad.addColorStop(0, 'rgba(0, 0, 0, 0.08)');
+  leftGrad.addColorStop(1, 'transparent');
+  ctx.fillStyle = leftGrad;
+  ctx.fillRect(ox, oy, vigSize, BOARD_SIZE);
+  // Right edge
+  const rightGrad = ctx.createLinearGradient(ox + BOARD_SIZE - vigSize, oy, ox + BOARD_SIZE, oy);
+  rightGrad.addColorStop(0, 'transparent');
+  rightGrad.addColorStop(1, 'rgba(0, 0, 0, 0.08)');
+  ctx.fillStyle = rightGrad;
+  ctx.fillRect(ox + BOARD_SIZE - vigSize, oy, vigSize, BOARD_SIZE);
+  ctx.restore();
+
   // Labels
   const labelColor = '#8b7355';
   ctx.font = '10px "Orbitron", sans-serif';

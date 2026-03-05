@@ -22,10 +22,12 @@ function sizeCanvas(layout: Layout): void {
   const maxH = window.innerHeight - 40;
   const scale = Math.min(maxW / gameW, maxH / gameH, 2.5);
 
-  canvas.width = gameW;
-  canvas.height = gameH;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = gameW * dpr;
+  canvas.height = gameH * dpr;
   canvas.style.width = `${Math.floor(gameW * scale)}px`;
   canvas.style.height = `${Math.floor(gameH * scale)}px`;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 
 // Initial sizing
@@ -117,8 +119,9 @@ loop.start();
 
 // Draw a title screen before game starts
 function drawTitleScreen(): void {
-  const w = canvas.width;
-  const h = canvas.height;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.width / dpr;
+  const h = canvas.height / dpr;
 
   ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, w, h);
@@ -130,7 +133,10 @@ function drawTitleScreen(): void {
   // Title - PAC-MAN
   ctx.font = '900 36px "Orbitron", "Press Start 2P", sans-serif';
   ctx.fillStyle = '#ffcc00';
+  ctx.shadowColor = '#ffcc00';
+  ctx.shadowBlur = 20;
   ctx.fillText('PAC-MAN', w / 2, h * 0.30);
+  ctx.shadowBlur = 0;
 
   // Decorative line
   const lineGrad = ctx.createLinearGradient(w * 0.2, 0, w * 0.8, 0);
@@ -146,11 +152,14 @@ function drawTitleScreen(): void {
 
   // Press any key
   ctx.font = '600 13px "Orbitron", "Press Start 2P", sans-serif';
+  ctx.shadowColor = '#4488ff';
+  ctx.shadowBlur = 10;
   ctx.fillStyle = '#4488ff';
   const alpha = 0.4 + Math.sin(Date.now() / 500) * 0.6;
   ctx.globalAlpha = Math.max(0, alpha);
   ctx.fillText('PRESS ANY KEY', w / 2, h * 0.52);
   ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
 
   // Controls hint
   ctx.font = '400 9px "Orbitron", sans-serif';

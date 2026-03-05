@@ -13,12 +13,6 @@ const categoryColors: Record<string, string> = {
   party: "bg-cat-party/20 text-cat-party",
 };
 
-const descriptions: Record<string, string> = {
-  "neon-pacman": "Navigate the maze, eat dots, dodge ghosts. The classic arcade experience reimagined.",
-  "connect-four": "Drop discs, think ahead, connect four to win. Challenge a smart AI opponent.",
-  chess: "The ultimate strategy game. Checkmate your opponent in this timeless classic.",
-};
-
 export function HeroCarousel({ games }: { games: GameManifest[] }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -67,7 +61,7 @@ export function HeroCarousel({ games }: { games: GameManifest[] }) {
             </span>
             <h2 className="mb-2 text-2xl sm:text-3xl md:text-4xl font-bold text-text">{game.name}</h2>
             <p className="mb-6 text-sm leading-relaxed text-text-secondary">
-              {descriptions[game.id] || game.description}
+              {game.description}
             </p>
             <Link
               href={`/games/${game.id}/play`}

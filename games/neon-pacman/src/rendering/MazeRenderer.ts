@@ -43,12 +43,20 @@ export class MazeRenderer {
       }
     }
 
-    // Wall edges - single clean pass
+    // Wall edges
     ctx.strokeStyle = WALL_COLOR;
     ctx.lineWidth = 2;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
+    // Neon glow pass (wider blurred underneath)
+    ctx.save();
+    ctx.shadowColor = WALL_COLOR;
+    ctx.shadowBlur = 12;
+    this.strokeWallEdges(ctx, layout, T);
+    ctx.restore();
+
+    // Tight clean pass on top
     this.strokeWallEdges(ctx, layout, T);
   }
 
@@ -125,19 +133,22 @@ export class MazeRenderer {
     const T = TILE_SIZE;
     const radius = T * 0.1;
 
-    ctx.fillStyle = DOT_COLOR;
-
-    ctx.beginPath();
     for (let col = 0; col < layout.width; col++) {
       for (let row = 0; row < layout.height; row++) {
         if (!layout.hasFood(col, row)) continue;
         const cx = col * T + T / 2;
         const cy = row * T + T / 2;
-        ctx.moveTo(cx + radius, cy);
+
+        const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.4, DOT_COLOR);
+        grad.addColorStop(1, DOT_COLOR);
+        ctx.fillStyle = grad;
+        ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
-    ctx.fill();
   }
 
   private renderCapsules(
@@ -153,6 +164,9 @@ export class MazeRenderer {
     const visible = Math.sin(time * 4) > -0.3;
     if (!visible) return;
 
+    ctx.save();
+    ctx.shadowColor = CAPSULE_GLOW;
+    ctx.shadowBlur = 14;
     ctx.fillStyle = CAPSULE_COLOR;
 
     for (const cap of layout.capsules) {
@@ -163,5 +177,6 @@ export class MazeRenderer {
       ctx.arc(cx, cy, baseRadius, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.restore();
   }
 }

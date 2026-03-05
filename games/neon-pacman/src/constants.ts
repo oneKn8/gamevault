@@ -57,5 +57,5 @@ export const GHOST_COLORS: Record<string, { body: string; bodyLight: string }> =
   clyde: { body: '#ffb852', bodyLight: '#ffdd99' },
 };
 
-export const FRIGHTENED_COLOR = '#2121de';
+export const FRIGHTENED_COLOR = '#1414b8';
 export const FRIGHTENED_FLASH = '#ffffff';
