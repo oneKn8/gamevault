@@ -27,34 +27,26 @@ export class Renderer {
   /** Draw the main menu with title and difficulty buttons. */
   drawMenu(ctx: CanvasRenderingContext2D, w: number, h: number, time: number): void {
     // Background
-    ctx.fillStyle = BG;
-    ctx.fillRect(0, 0, w, h);
-
-    // Subtle animated gradient overlay
-    const grad = ctx.createRadialGradient(w / 2, h / 3, 0, w / 2, h / 3, w * 0.6);
-    grad.addColorStop(0, 'rgba(33, 150, 243, 0.08)');
-    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    ctx.fillStyle = grad;
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, '#e8e8e8');
+    bgGrad.addColorStop(1, '#d0d0d0');
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
     // Title
     const titleY = h * 0.25;
-    const pulse = 0.8 + Math.sin(time * 2) * 0.2;
 
     ctx.save();
-    ctx.font = "900 36px 'Orbitron', sans-serif";
+    ctx.font = "900 32px 'Orbitron', sans-serif";
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#2196F3';
-    ctx.shadowColor = '#2196F3';
-    ctx.shadowBlur = 20 * pulse;
+    ctx.fillStyle = '#1565C0';
     ctx.fillText('MINESWEEPER', w / 2, titleY);
-    ctx.shadowBlur = 0;
     ctx.restore();
 
     // Subtitle
     ctx.font = "400 14px 'Orbitron', sans-serif";
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.fillStyle = '#888888';
     ctx.textAlign = 'center';
     ctx.fillText('Select Difficulty', w / 2, titleY + 50);
 
@@ -71,24 +63,31 @@ export class Renderer {
       const bx = (w - buttonW) / 2;
       const by = startY + i * (buttonH + buttonGap);
 
-      // Button background
-      ctx.fillStyle = '#1a1a2a';
-      ctx.strokeStyle = '#2196F3';
-      ctx.lineWidth = 1.5;
-      this.roundRect(ctx, bx, by, buttonW, buttonH, 6);
+      // Button background with raised 3D look
+      ctx.fillStyle = '#c8c8c8';
+      this.roundRect(ctx, bx, by, buttonW, buttonH, 4);
       ctx.fill();
-      ctx.stroke();
+
+      // Top-left highlight
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.fillRect(bx + 2, by, buttonW - 4, 2);
+      ctx.fillRect(bx, by + 2, 2, buttonH - 4);
+
+      // Bottom-right shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.fillRect(bx + 2, by + buttonH - 2, buttonW - 4, 2);
+      ctx.fillRect(bx + buttonW - 2, by + 2, 2, buttonH - 4);
 
       // Button text
       ctx.font = "600 14px 'Orbitron', sans-serif";
-      ctx.fillStyle = '#ffffff';
+      ctx.fillStyle = '#333333';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(config.name, w / 2, by + buttonH / 2 - 6);
 
       // Details
       ctx.font = "400 10px 'Orbitron', sans-serif";
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.fillStyle = '#777777';
       ctx.fillText(
         `${config.cols}x${config.rows} / ${config.mines} mines`,
         w / 2,
@@ -97,9 +96,9 @@ export class Renderer {
     }
 
     // Pulsing prompt at bottom
-    const promptAlpha = 0.3 + Math.sin(time * 3) * 0.2;
+    const promptAlpha = 0.4 + Math.sin(time * 3) * 0.3;
     ctx.font = "400 11px 'Orbitron', sans-serif";
-    ctx.fillStyle = `rgba(255, 255, 255, ${promptAlpha})`;
+    ctx.fillStyle = `rgba(100, 100, 100, ${promptAlpha})`;
     ctx.textAlign = 'center';
     ctx.fillText('Click a difficulty to begin', w / 2, h * 0.88);
   }
@@ -145,42 +144,48 @@ export class Renderer {
 
   /** Draw the header bar with mine counter, smiley face, and timer. */
   private drawHeader(ctx: CanvasRenderingContext2D, controller: GameController, w: number): void {
-    // Header background
-    ctx.fillStyle = '#111118';
+    // Header background -- slightly darker than field
+    ctx.fillStyle = '#b8b8b8';
     ctx.fillRect(0, 0, w, HEADER_HEIGHT);
 
-    // Bottom border
-    ctx.fillStyle = 'rgba(33, 150, 243, 0.3)';
+    // Sunken border effect
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.fillRect(0, 0, w, 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
     ctx.fillRect(0, HEADER_HEIGHT - 1, w, 1);
 
     const centerY = HEADER_HEIGHT / 2;
 
-    // Mine counter (left)
+    // Mine counter (left) - LCD-style red on dark bg
     const remaining = controller.board
       ? controller.board.mineCount - controller.board.getFlagCount()
       : 0;
-    ctx.font = "700 22px 'Orbitron', sans-serif";
-    ctx.textAlign = 'left';
+
+    // Counter background
+    ctx.fillStyle = '#222222';
+    this.roundRect(ctx, PADDING, centerY - 14, 64, 28, 3);
+    ctx.fill();
+
+    ctx.font = "700 20px 'Orbitron', sans-serif";
+    ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = '#f44336';
-    ctx.shadowColor = '#f44336';
-    ctx.shadowBlur = 6;
-    ctx.fillText(String(remaining).padStart(3, '0'), PADDING + 4, centerY);
-    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#e53935';
+    ctx.fillText(String(remaining).padStart(3, '0'), PADDING + 32, centerY);
 
     // Status face (center)
     const faceSize = 28;
     const faceX = w / 2;
     this.drawFace(ctx, faceX, centerY, faceSize, controller.phase);
 
-    // Timer (right)
-    ctx.font = "700 22px 'Orbitron', sans-serif";
-    ctx.textAlign = 'right';
-    ctx.fillStyle = '#4CAF50';
-    ctx.shadowColor = '#4CAF50';
-    ctx.shadowBlur = 6;
-    ctx.fillText(controller.timer.getDisplay(), w - PADDING - 4, centerY);
-    ctx.shadowBlur = 0;
+    // Timer (right) - LCD-style on dark bg
+    ctx.fillStyle = '#222222';
+    this.roundRect(ctx, w - PADDING - 64, centerY - 14, 64, 28, 3);
+    ctx.fill();
+
+    ctx.font = "700 20px 'Orbitron', sans-serif";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#4caf50';
+    ctx.fillText(controller.timer.getDisplay(), w - PADDING - 32, centerY);
   }
 
   /** Draw a simple smiley/dead face as the status indicator. */
@@ -199,10 +204,12 @@ export class Renderer {
     ctx.beginPath();
     ctx.arc(x, y, r, 0, Math.PI * 2);
     ctx.fillStyle = '#FFD700';
-    ctx.shadowColor = '#FFD700';
-    ctx.shadowBlur = 6;
     ctx.fill();
-    ctx.shadowBlur = 0;
+
+    // Subtle border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
     // Eyes
     const eyeY = y - r * 0.2;
@@ -248,13 +255,10 @@ export class Renderer {
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     if (phase === 'lost') {
-      // Frown
       ctx.arc(x, mouthY + r * 0.25, r * 0.3, Math.PI + 0.5, -0.5);
     } else if (phase === 'won') {
-      // Big smile
       ctx.arc(x, mouthY - r * 0.1, r * 0.35, 0.3, Math.PI - 0.3);
     } else {
-      // Neutral smile
       ctx.arc(x, mouthY, r * 0.25, 0.2, Math.PI - 0.2);
     }
     ctx.stroke();
@@ -272,11 +276,10 @@ export class Renderer {
     time: number
   ): void {
     // Dim overlay
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     ctx.fillRect(0, 0, w, h);
 
     const centerY = h / 2;
-    const pulse = 0.8 + Math.sin(time * 3) * 0.2;
 
     // Title
     ctx.save();
@@ -285,17 +288,12 @@ export class Renderer {
     ctx.textBaseline = 'middle';
 
     if (won) {
-      ctx.fillStyle = '#4CAF50';
-      ctx.shadowColor = '#4CAF50';
-      ctx.shadowBlur = 20 * pulse;
+      ctx.fillStyle = '#4caf50';
       ctx.fillText('YOU WIN!', w / 2, centerY - 40);
     } else {
-      ctx.fillStyle = '#f44336';
-      ctx.shadowColor = '#f44336';
-      ctx.shadowBlur = 20 * pulse;
+      ctx.fillStyle = '#e53935';
       ctx.fillText('GAME OVER', w / 2, centerY - 40);
     }
-    ctx.shadowBlur = 0;
     ctx.restore();
 
     // Score (only for wins)
@@ -307,7 +305,7 @@ export class Renderer {
     }
 
     // Restart prompt
-    const promptAlpha = 0.4 + Math.sin(time * 4) * 0.3;
+    const promptAlpha = 0.5 + Math.sin(time * 4) * 0.3;
     ctx.font = "400 13px 'Orbitron', sans-serif";
     ctx.fillStyle = `rgba(255, 255, 255, ${promptAlpha})`;
     ctx.textAlign = 'center';
@@ -316,7 +314,6 @@ export class Renderer {
 
   /**
    * Convert mouse coordinates to a grid cell position.
-   * Returns null if the click is outside the grid.
    */
   getClickedCell(
     mouseX: number,
@@ -335,7 +332,6 @@ export class Renderer {
 
   /**
    * Determine which difficulty button was clicked on the menu screen.
-   * Returns null if no button was hit.
    */
   getDifficultyAtPoint(
     mouseX: number,

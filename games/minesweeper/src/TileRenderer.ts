@@ -5,7 +5,6 @@ export class TileRenderer {
   /**
    * Draw a single tile at the given position.
    * @param animScale - If provided, apply vertical scale transform for flip animation.
-   *                    Contains scaleY and whether to show revealed content.
    */
   draw(
     ctx: CanvasRenderingContext2D,
@@ -53,7 +52,7 @@ export class TileRenderer {
     ctx.restore();
   }
 
-  /** Hidden tile with 3D bevel effect - raised look. */
+  /** Hidden tile with classic 3D bevel effect - raised look like Windows Minesweeper. */
   private drawHiddenTile(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -66,18 +65,18 @@ export class TileRenderer {
     ctx.fillStyle = hover ? TILE_HOVER : TILE_HIDDEN;
     ctx.fillRect(x, y, w, h);
 
-    // Top-left highlight (lighter edge)
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+    // Top-left highlight (white edge for raised 3D look)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
     ctx.fillRect(x, y, w, 2);
     ctx.fillRect(x, y, 2, h);
 
-    // Bottom-right shadow (darker edge)
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    // Bottom-right shadow (dark edge for raised 3D look)
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
     ctx.fillRect(x, y + h - 2, w, 2);
     ctx.fillRect(x + w - 2, y, 2, h);
   }
 
-  /** Revealed tile - flat dark background with subtle border. */
+  /** Revealed tile - flat sunken look with subtle border. */
   private drawRevealedTile(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -88,8 +87,8 @@ export class TileRenderer {
     ctx.fillStyle = TILE_REVEALED;
     ctx.fillRect(x, y, w, h);
 
-    // Inner border
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    // Subtle inset border
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
     ctx.lineWidth = 0.5;
     ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
   }
@@ -103,21 +102,16 @@ export class TileRenderer {
     h: number,
     num: number
   ): void {
-    const color = NUMBER_COLORS[num - 1] || '#ffffff';
+    const color = NUMBER_COLORS[num - 1] || '#333333';
     const fontSize = Math.floor(h * 0.55);
     ctx.font = `700 ${fontSize}px 'Orbitron', sans-serif`;
     ctx.fillStyle = color;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-
-    // Subtle glow
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 4;
     ctx.fillText(String(num), x + w / 2, y + h / 2 + 1);
-    ctx.shadowBlur = 0;
   }
 
-  /** Stylized mine icon - circle with spikes. */
+  /** Mine icon - dark circle with spikes. */
   drawMineIcon(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -131,12 +125,8 @@ export class TileRenderer {
 
     ctx.save();
 
-    // Outer glow
-    ctx.shadowColor = '#ff4444';
-    ctx.shadowBlur = 8;
-
     // Spikes
-    ctx.strokeStyle = '#ff4444';
+    ctx.strokeStyle = '#333333';
     ctx.lineWidth = 2;
     const spikeLen = radius * 1.6;
     for (let i = 0; i < 8; i++) {
@@ -150,7 +140,7 @@ export class TileRenderer {
     // Main circle
     ctx.beginPath();
     ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#ff4444';
+    ctx.fillStyle = '#333333';
     ctx.fill();
 
     // Inner highlight
@@ -162,7 +152,7 @@ export class TileRenderer {
     ctx.restore();
   }
 
-  /** Stylized flag icon - red triangle on a pole. */
+  /** Flag icon - red flag on a pole. */
   drawFlagIcon(
     ctx: CanvasRenderingContext2D,
     x: number,
@@ -178,7 +168,7 @@ export class TileRenderer {
     ctx.save();
 
     // Pole
-    ctx.strokeStyle = '#cccccc';
+    ctx.strokeStyle = '#555555';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(poleX, top);
@@ -186,13 +176,11 @@ export class TileRenderer {
     ctx.stroke();
 
     // Base
-    ctx.fillStyle = '#cccccc';
+    ctx.fillStyle = '#555555';
     ctx.fillRect(cx - w * 0.15, bottom - 2, w * 0.25, 3);
 
     // Flag triangle
-    ctx.fillStyle = '#f44336';
-    ctx.shadowColor = '#f44336';
-    ctx.shadowBlur = 4;
+    ctx.fillStyle = '#e53935';
     ctx.beginPath();
     ctx.moveTo(poleX, top);
     ctx.lineTo(poleX + w * 0.35, top + h * 0.15);

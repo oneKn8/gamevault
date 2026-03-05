@@ -18,8 +18,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 0, y: 2 }, { x: 1, y: 2 }, { x: 2, y: 2 }, { x: 3, y: 2 }],
       [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }],
     ],
-    color: 0x00ffff,
-    emissive: 0x003333,
+    color: 0x00bcd4,
+    emissive: 0x000000,
   },
   O: {
     blocks: [
@@ -28,8 +28,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
       [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }],
     ],
-    color: 0xffff00,
-    emissive: 0x333300,
+    color: 0xfdd835,
+    emissive: 0x000000,
   },
   T: {
     blocks: [
@@ -38,8 +38,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 1, y: 2 }],
       [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
     ],
-    color: 0xaa00ff,
-    emissive: 0x220044,
+    color: 0x9c27b0,
+    emissive: 0x000000,
   },
   S: {
     blocks: [
@@ -48,8 +48,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 2 }],
       [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
     ],
-    color: 0x00ff00,
-    emissive: 0x003300,
+    color: 0x4caf50,
+    emissive: 0x000000,
   },
   Z: {
     blocks: [
@@ -58,8 +58,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 2 }],
       [{ x: 1, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 0, y: 2 }],
     ],
-    color: 0xff0000,
-    emissive: 0x330000,
+    color: 0xe53935,
+    emissive: 0x000000,
   },
   J: {
     blocks: [
@@ -68,8 +68,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 2, y: 2 }],
       [{ x: 1, y: 0 }, { x: 1, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 2 }],
     ],
-    color: 0x0000ff,
-    emissive: 0x000033,
+    color: 0x1565c0,
+    emissive: 0x000000,
   },
   L: {
     blocks: [
@@ -78,8 +78,8 @@ export const TETROMINO_DATA: Record<TetrominoType, TetrominoData> = {
       [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 }, { x: 0, y: 2 }],
       [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }],
     ],
-    color: 0xff8800,
-    emissive: 0x331a00,
+    color: 0xf57c00,
+    emissive: 0x000000,
   },
 };
 

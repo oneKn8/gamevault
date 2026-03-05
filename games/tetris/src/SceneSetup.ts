@@ -15,13 +15,12 @@ export interface SceneObjects {
 
 /** Creates and configures the Three.js scene, camera, renderer, and lights. */
 export function createScene(canvas: HTMLCanvasElement): SceneObjects {
-  // Scene
+  // Scene with a clean dark background (not pitch black)
   const scene = new Scene();
-  scene.background = new Color(0x0a0a0a);
+  scene.background = new Color(0x1e1e28);
 
   // Camera: positioned to see the 10x20 board with a slight perspective angle
   const camera = new PerspectiveCamera(45, 1, 0.1, 100);
-  // Board center is at (5, 10, 0). Camera looks from slight angle for 3D depth.
   camera.position.set(5, 10, 24);
   camera.lookAt(5, 10, 0);
 
@@ -33,13 +32,18 @@ export function createScene(canvas: HTMLCanvasElement): SceneObjects {
   });
   renderer.setPixelRatio(window.devicePixelRatio);
 
-  // Lighting
-  const ambient = new AmbientLight(0x404040, 0.6);
+  // Brighter, more even lighting for a clean look
+  const ambient = new AmbientLight(0xffffff, 0.7);
   scene.add(ambient);
 
-  const directional = new DirectionalLight(0xffffff, 0.8);
+  const directional = new DirectionalLight(0xffffff, 0.6);
   directional.position.set(10, 20, 15);
   scene.add(directional);
+
+  // Fill light from the opposite side to reduce harsh shadows
+  const fill = new DirectionalLight(0xffffff, 0.3);
+  fill.position.set(-5, 10, 10);
+  scene.add(fill);
 
   return { scene, camera, renderer };
 }

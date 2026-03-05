@@ -227,30 +227,22 @@ function drawHUD(): void {
 
 function drawTitleScreen(w: number, h: number): void {
   // Semi-transparent background
-  overlayCtx.fillStyle = 'rgba(10, 10, 10, 0.7)';
+  overlayCtx.fillStyle = 'rgba(20, 20, 30, 0.75)';
   overlayCtx.fillRect(0, 0, w, h);
 
-  // Title with glow
   overlayCtx.save();
   overlayCtx.textAlign = 'center';
   overlayCtx.textBaseline = 'middle';
 
   const titleSize = Math.min(w * 0.12, 64);
   overlayCtx.font = `900 ${titleSize}px 'Orbitron', sans-serif`;
-
-  // Glow layers
-  overlayCtx.shadowColor = '#00ffff';
-  overlayCtx.shadowBlur = 40;
-  overlayCtx.fillStyle = '#00ffff';
+  overlayCtx.fillStyle = '#ffffff';
   overlayCtx.fillText('TETRIS', w / 2, h * 0.35);
-  overlayCtx.shadowBlur = 20;
-  overlayCtx.fillText('TETRIS', w / 2, h * 0.35);
-  overlayCtx.shadowBlur = 0;
 
   // Subtitle
   const subSize = Math.min(w * 0.035, 18);
   overlayCtx.font = `400 ${subSize}px 'Orbitron', sans-serif`;
-  overlayCtx.fillStyle = '#888888';
+  overlayCtx.fillStyle = '#999999';
   overlayCtx.fillText('3D BLOCK PUZZLE', w / 2, h * 0.43);
 
   // Pulsing "Press SPACE" text
@@ -265,7 +257,7 @@ function drawTitleScreen(w: number, h: number): void {
   // Controls hint
   const hintSize = Math.min(w * 0.025, 12);
   overlayCtx.font = `400 ${hintSize}px 'Orbitron', sans-serif`;
-  overlayCtx.fillStyle = '#555555';
+  overlayCtx.fillStyle = '#777777';
   const controlY = h * 0.72;
   overlayCtx.fillText('ARROWS / WASD - Move & Rotate', w / 2, controlY);
   overlayCtx.fillText('SPACE - Hard Drop  |  C - Hold', w / 2, controlY + hintSize * 1.8);
@@ -276,7 +268,7 @@ function drawTitleScreen(w: number, h: number): void {
 
 function drawPauseScreen(w: number, h: number): void {
   overlayCtx.save();
-  overlayCtx.fillStyle = 'rgba(10, 10, 10, 0.6)';
+  overlayCtx.fillStyle = 'rgba(20, 20, 30, 0.65)';
   overlayCtx.fillRect(0, 0, w, h);
 
   overlayCtx.textAlign = 'center';
@@ -284,22 +276,19 @@ function drawPauseScreen(w: number, h: number): void {
 
   const size = Math.min(w * 0.08, 48);
   overlayCtx.font = `700 ${size}px 'Orbitron', sans-serif`;
-  overlayCtx.shadowColor = '#ffff00';
-  overlayCtx.shadowBlur = 20;
-  overlayCtx.fillStyle = '#ffff00';
+  overlayCtx.fillStyle = '#fdd835';
   overlayCtx.fillText('PAUSED', w / 2, h / 2);
-  overlayCtx.shadowBlur = 0;
 
   const subSize = Math.min(w * 0.035, 16);
   overlayCtx.font = `400 ${subSize}px 'Orbitron', sans-serif`;
-  overlayCtx.fillStyle = '#888888';
+  overlayCtx.fillStyle = '#999999';
   overlayCtx.fillText('Press P to resume', w / 2, h / 2 + size);
   overlayCtx.restore();
 }
 
 function drawGameOverScreen(w: number, h: number): void {
   overlayCtx.save();
-  overlayCtx.fillStyle = 'rgba(10, 10, 10, 0.7)';
+  overlayCtx.fillStyle = 'rgba(20, 20, 30, 0.75)';
   overlayCtx.fillRect(0, 0, w, h);
 
   overlayCtx.textAlign = 'center';
@@ -307,15 +296,12 @@ function drawGameOverScreen(w: number, h: number): void {
 
   const size = Math.min(w * 0.08, 48);
   overlayCtx.font = `700 ${size}px 'Orbitron', sans-serif`;
-  overlayCtx.shadowColor = '#ff0000';
-  overlayCtx.shadowBlur = 30;
-  overlayCtx.fillStyle = '#ff3333';
+  overlayCtx.fillStyle = '#e53935';
   overlayCtx.fillText('GAME OVER', w / 2, h * 0.35);
-  overlayCtx.shadowBlur = 0;
 
   const statSize = Math.min(w * 0.04, 20);
   overlayCtx.font = `600 ${statSize}px 'Orbitron', sans-serif`;
-  overlayCtx.fillStyle = '#cccccc';
+  overlayCtx.fillStyle = '#dddddd';
   overlayCtx.fillText(`Score: ${controller.score}`, w / 2, h * 0.45);
   overlayCtx.fillText(`Level: ${controller.level}`, w / 2, h * 0.50);
   overlayCtx.fillText(`Lines: ${controller.lines}`, w / 2, h * 0.55);
@@ -355,7 +341,7 @@ function drawScorePanel(w: number, h: number): void {
   overlayCtx.fillText('LEVEL', panelX, panelY + fontSize * 2.8);
 
   overlayCtx.font = `700 ${fontSize}px 'Orbitron', sans-serif`;
-  overlayCtx.fillStyle = '#00ffff';
+  overlayCtx.fillStyle = '#00bcd4';
   overlayCtx.fillText(String(controller.level), panelX, panelY + fontSize * 3.8);
 
   // Lines
@@ -395,16 +381,12 @@ function drawMiniPiece(
   const offsetY = cy - pieceH / 2;
 
   overlayCtx.fillStyle = color;
-  overlayCtx.shadowColor = color;
-  overlayCtx.shadowBlur = 6;
 
   for (const b of blocks) {
     const bx = offsetX + (b.x - minX) * blockSize;
     const by = offsetY + (b.y - minY) * blockSize;
     overlayCtx.fillRect(bx + 1, by + 1, blockSize - 2, blockSize - 2);
   }
-
-  overlayCtx.shadowBlur = 0;
 }
 
 function drawNextPanel(w: number, h: number): void {
@@ -459,7 +441,7 @@ function drawControls(w: number, h: number): void {
   overlayCtx.textAlign = 'left';
   overlayCtx.textBaseline = 'bottom';
   overlayCtx.font = `400 ${fontSize}px 'Orbitron', sans-serif`;
-  overlayCtx.fillStyle = '#333333';
+  overlayCtx.fillStyle = '#777777';
 
   const y = h - fontSize * 0.5;
   overlayCtx.fillText('Arrows/WASD  Space=Drop  C=Hold  Z=CCW  P=Pause', w * 0.02, y);

@@ -17,18 +17,13 @@ export class ParticleSystem {
   constructor() {
     this.particles = [];
     this.chainQueue = [];
-    this.chainColor = '#00ff88';
+    this.chainColor = '#4caf50';
     this.chainDelay = 0.03;
     this.chainTimer = 0;
   }
 
   /**
    * Emit a burst of particles at a world-pixel position.
-   * @param x - Pixel X coordinate.
-   * @param y - Pixel Y coordinate.
-   * @param count - Number of particles to spawn.
-   * @param color - CSS color string.
-   * @param speed - Maximum initial velocity.
    */
   emit(x: number, y: number, count: number, color: string, speed: number): void {
     for (let i = 0; i < count; i++) {
@@ -49,9 +44,6 @@ export class ParticleSystem {
 
   /**
    * Emit a small trail effect (1-2 particles) behind the snake head.
-   * @param x - Pixel X.
-   * @param y - Pixel Y.
-   * @param color - CSS color string.
    */
   emitTrail(x: number, y: number, color: string): void {
     const count = 1 + Math.floor(Math.random() * 2);
@@ -75,7 +67,7 @@ export class ParticleSystem {
    */
   chainExplosion(segments: GridPosition[]): void {
     this.chainQueue = segments.map((s) => ({ ...s }));
-    this.chainColor = '#00ff88';
+    this.chainColor = '#4caf50';
     this.chainTimer = 0;
   }
 
@@ -92,9 +84,9 @@ export class ParticleSystem {
         this.emit(px, py, 8, this.chainColor, 120);
         // Fade color toward red along the body.
         const ratio = 1 - this.chainQueue.length / (this.chainQueue.length + 1);
-        const r = Math.floor(0 + ratio * 255);
-        const g = Math.floor(255 - ratio * 180);
-        const b = Math.floor(136 - ratio * 68);
+        const r = Math.floor(76 + ratio * 153);
+        const g = Math.floor(175 - ratio * 112);
+        const b = Math.floor(80 - ratio * 27);
         this.chainColor = `rgb(${r},${g},${b})`;
       }
     }
@@ -114,14 +106,12 @@ export class ParticleSystem {
     }
   }
 
-  /** Draw all live particles with glow effects. */
+  /** Draw all live particles. */
   draw(ctx: CanvasRenderingContext2D): void {
     for (const p of this.particles) {
       const alpha = Math.max(0, p.life / p.maxLife);
       ctx.save();
       ctx.globalAlpha = alpha;
-      ctx.shadowColor = p.color;
-      ctx.shadowBlur = 10;
       ctx.fillStyle = p.color;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.size * alpha, 0, Math.PI * 2);

@@ -6,7 +6,6 @@ import {
   LineSegments,
   LineBasicMaterial,
   Group,
-  Color,
 } from 'three';
 
 // Cache geometries to avoid recreating them
@@ -17,17 +16,8 @@ const edgesGeo = new EdgesGeometry(blockGeometry);
 const meshPool: Map<number, Group[]> = new Map();
 const ghostPool: Group[] = [];
 
-/** Creates a brighter version of a color for edge glow. */
-function brightenColor(hex: number, factor: number = 1.5): Color {
-  const c = new Color(hex);
-  c.r = Math.min(1.0, c.r * factor);
-  c.g = Math.min(1.0, c.g * factor);
-  c.b = Math.min(1.0, c.b * factor);
-  return c;
-}
-
-/** Creates a 3D block mesh group (solid box + glowing edges). */
-export function createBlockMesh(color: number, emissive: number): Group {
+/** Creates a 3D block mesh group (solid box + clean edges). */
+export function createBlockMesh(color: number, _emissive: number): Group {
   // Check pool
   const pool = meshPool.get(color);
   if (pool && pool.length > 0) {
@@ -38,23 +28,22 @@ export function createBlockMesh(color: number, emissive: number): Group {
 
   const group = new Group();
 
-  // Solid block
+  // Solid block -- clean opaque material, no emissive glow
   const material = new MeshPhongMaterial({
     color,
-    emissive,
-    shininess: 80,
-    transparent: true,
-    opacity: 0.88,
+    emissive: 0x000000,
+    shininess: 40,
+    transparent: false,
+    opacity: 1.0,
   });
   const mesh = new Mesh(blockGeometry, material);
   group.add(mesh);
 
-  // Glowing edges
-  const edgeColor = brightenColor(color, 1.8);
+  // Subtle dark edges for definition
   const edgeMaterial = new LineBasicMaterial({
-    color: edgeColor,
+    color: 0x000000,
     transparent: true,
-    opacity: 0.7,
+    opacity: 0.15,
   });
   const edges = new LineSegments(edgesGeo, edgeMaterial);
   group.add(edges);

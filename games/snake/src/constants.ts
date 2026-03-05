@@ -12,12 +12,13 @@ export const HUD_HEIGHT = 50;
 export const CANVAS_WIDTH = GRID_W * CELL;
 export const CANVAS_HEIGHT = GRID_H * CELL + HUD_HEIGHT;
 
-// Colors
-export const SNAKE_HEAD = '#00ff88';
-export const SNAKE_BODY = '#00cc66';
-export const FOOD = '#ff4488';
-export const BG = '#0a0a0a';
-export const GRID_LINE = '#111111';
+// Colors -- clean modern palette
+export const SNAKE_HEAD = '#4caf50';
+export const SNAKE_BODY = '#388e3c';
+export const FOOD = '#e53935';
+export const BG = '#e8e8e8';
+export const GRID_LINE = '#d4d4d4';
+export const FIELD_BG = '#f0f0f0';
 
 // Tick timing (ms per movement tick)
 export const BASE_SPEED = 150;

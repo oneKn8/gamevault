@@ -10,6 +10,7 @@ import {
   GRID_H,
   HUD_HEIGHT,
   BG,
+  FIELD_BG,
   GRID_LINE,
   SNAKE_HEAD,
 } from './constants';
@@ -29,7 +30,10 @@ export class Renderer {
 
   /** Draw the title screen. */
   drawTitle(ctx: CanvasRenderingContext2D, w: number, h: number, time: number): void {
-    ctx.fillStyle = BG;
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, '#e8e8e8');
+    bgGrad.addColorStop(1, '#d0d0d0');
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
     ctx.save();
@@ -38,19 +42,13 @@ export class Renderer {
 
     // Title text.
     ctx.font = '900 48px "Orbitron", sans-serif';
-    ctx.fillStyle = SNAKE_HEAD;
-    ctx.shadowColor = SNAKE_HEAD;
-    ctx.shadowBlur = 25;
+    ctx.fillStyle = '#4caf50';
     ctx.fillText('SNAKE', w / 2, h * 0.32);
-    // Double-draw for extra glow intensity.
-    ctx.shadowBlur = 40;
-    ctx.fillText('SNAKE', w / 2, h * 0.32);
-    ctx.shadowBlur = 0;
 
     // Decorative line.
     const lineGrad = ctx.createLinearGradient(w * 0.15, 0, w * 0.85, 0);
     lineGrad.addColorStop(0, 'transparent');
-    lineGrad.addColorStop(0.5, 'rgba(0, 255, 136, 0.4)');
+    lineGrad.addColorStop(0.5, 'rgba(76, 175, 80, 0.4)');
     lineGrad.addColorStop(1, 'transparent');
     ctx.strokeStyle = lineGrad;
     ctx.lineWidth = 1;
@@ -61,18 +59,15 @@ export class Renderer {
 
     // Pulsing prompt.
     ctx.font = '600 14px "Orbitron", sans-serif';
-    ctx.fillStyle = SNAKE_HEAD;
-    ctx.shadowColor = SNAKE_HEAD;
-    ctx.shadowBlur = 10;
+    ctx.fillStyle = '#4caf50';
     const alpha = 0.3 + Math.sin(time * 3) * 0.7;
     ctx.globalAlpha = Math.max(0, alpha);
     ctx.fillText('PRESS SPACE TO START', w / 2, h * 0.54);
     ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
 
     // Controls hint.
     ctx.font = '400 10px "Orbitron", sans-serif';
-    ctx.fillStyle = '#555566';
+    ctx.fillStyle = '#999999';
     ctx.fillText('ARROW KEYS / WASD TO MOVE', w / 2, h * 0.72);
     ctx.fillText('EAT FOOD TO GROW -- AVOID WALLS & YOURSELF', w / 2, h * 0.72 + 18);
 
@@ -82,11 +77,11 @@ export class Renderer {
   /** Draw the top HUD bar with the current score. */
   drawHUD(ctx: CanvasRenderingContext2D, w: number, score: number): void {
     // HUD background.
-    ctx.fillStyle = '#050505';
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, w, HUD_HEIGHT);
 
     // Bottom border.
-    ctx.strokeStyle = 'rgba(0, 255, 136, 0.2)';
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, HUD_HEIGHT);
@@ -98,18 +93,15 @@ export class Renderer {
 
     // Score label.
     ctx.font = '400 11px "Orbitron", sans-serif';
-    ctx.fillStyle = '#556666';
+    ctx.fillStyle = '#999999';
     ctx.textAlign = 'left';
     ctx.fillText('SCORE', 14, HUD_HEIGHT / 2 - 1);
 
     // Score value.
     ctx.font = '700 18px "Orbitron", sans-serif';
-    ctx.fillStyle = SNAKE_HEAD;
-    ctx.shadowColor = SNAKE_HEAD;
-    ctx.shadowBlur = 8;
+    ctx.fillStyle = '#333333';
     ctx.textAlign = 'left';
     ctx.fillText(String(score), 80, HUD_HEIGHT / 2);
-    ctx.shadowBlur = 0;
 
     ctx.restore();
   }
@@ -141,8 +133,8 @@ export class Renderer {
     particles: ParticleSystem,
     _time: number
   ): void {
-    // Clear.
-    ctx.fillStyle = BG;
+    // Clear with field background.
+    ctx.fillStyle = FIELD_BG;
     ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
     this.drawGrid(ctx);
@@ -161,7 +153,7 @@ export class Renderer {
     time: number
   ): void {
     // Semi-transparent overlay.
-    ctx.fillStyle = 'rgba(10, 10, 10, 0.75)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
     ctx.fillRect(0, HUD_HEIGHT, w, h - HUD_HEIGHT);
 
     ctx.save();
@@ -172,27 +164,21 @@ export class Renderer {
 
     // "GAME OVER" text.
     ctx.font = '900 36px "Orbitron", sans-serif';
-    ctx.fillStyle = '#ff4444';
-    ctx.shadowColor = '#ff4444';
-    ctx.shadowBlur = 20;
+    ctx.fillStyle = '#e53935';
     ctx.fillText('GAME OVER', w / 2, midY - 40);
-    ctx.shadowBlur = 0;
 
     // Final score.
     ctx.font = '600 16px "Orbitron", sans-serif';
-    ctx.fillStyle = '#cccccc';
+    ctx.fillStyle = '#ffffff';
     ctx.fillText(`SCORE: ${score}`, w / 2, midY + 10);
 
     // Pulsing restart prompt.
     ctx.font = '600 12px "Orbitron", sans-serif';
-    ctx.fillStyle = SNAKE_HEAD;
-    ctx.shadowColor = SNAKE_HEAD;
-    ctx.shadowBlur = 8;
+    ctx.fillStyle = '#ffffff';
     const alpha = 0.3 + Math.sin(time * 3) * 0.7;
     ctx.globalAlpha = Math.max(0, alpha);
     ctx.fillText('PRESS SPACE TO RESTART', w / 2, midY + 50);
     ctx.globalAlpha = 1;
-    ctx.shadowBlur = 0;
 
     ctx.restore();
   }

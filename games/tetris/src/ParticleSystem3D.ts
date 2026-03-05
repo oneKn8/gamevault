@@ -6,7 +6,7 @@ import {
   PointsMaterial,
   Points,
   Color,
-  AdditiveBlending,
+  NormalBlending,
 } from 'three';
 import type { BlockPosition } from './types';
 
@@ -46,9 +46,9 @@ export class ParticleSystem3D {
     this.material = new PointsMaterial({
       size: 0.15,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.8,
       vertexColors: true,
-      blending: AdditiveBlending,
+      blending: NormalBlending,
       depthWrite: false,
       sizeAttenuation: true,
     });
@@ -74,7 +74,6 @@ export class ParticleSystem3D {
     for (const pos of blockPositions) {
       for (let i = 0; i < count; i++) {
         if (this.particles.length >= MAX_PARTICLES) {
-          // Remove oldest particle
           this.particles.shift();
         }
 
@@ -98,7 +97,6 @@ export class ParticleSystem3D {
 
   /** Update particle positions and lifetimes. dt in seconds. */
   update(dt: number): void {
-    // Update particles
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.life -= dt / p.maxLife;
@@ -108,15 +106,10 @@ export class ParticleSystem3D {
         continue;
       }
 
-      // Physics
       p.x += p.vx * dt;
       p.y += p.vy * dt;
       p.z += p.vz * dt;
-
-      // Gravity
       p.vy -= 9.8 * dt;
-
-      // Drag
       p.vx *= 0.98;
       p.vz *= 0.98;
     }
@@ -132,13 +125,11 @@ export class ParticleSystem3D {
         this.positions[i * 3 + 1] = p.y;
         this.positions[i * 3 + 2] = p.z;
 
-        // Fade color with life
         const fade = Math.max(0, p.life);
         this.colors[i * 3] = fade;
         this.colors[i * 3 + 1] = fade;
         this.colors[i * 3 + 2] = fade;
       } else {
-        // Hide unused particles by placing far away
         this.positions[i * 3] = 0;
         this.positions[i * 3 + 1] = -100;
         this.positions[i * 3 + 2] = 0;
@@ -151,8 +142,7 @@ export class ParticleSystem3D {
     posAttr.needsUpdate = true;
     colAttr.needsUpdate = true;
 
-    // Update material opacity based on particle count
-    this.material.opacity = this.particles.length > 0 ? 0.9 : 0;
+    this.material.opacity = this.particles.length > 0 ? 0.8 : 0;
   }
 
   /** Remove and clean up resources. */

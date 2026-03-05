@@ -3,15 +3,12 @@ import { Direction } from './types';
 import { SNAKE_HEAD, SNAKE_BODY, HUD_HEIGHT } from './constants';
 
 /**
- * Handles drawing the snake with neon glow effects, rounded body segments,
- * and directional eyes on the head.
+ * Handles drawing the snake with clean rounded body segments,
+ * gradient coloring, and directional eyes on the head.
  */
 export class SnakeRenderer {
   /**
    * Draw the full snake (body then head) onto the canvas.
-   * @param ctx - Canvas 2D rendering context.
-   * @param snake - The snake instance.
-   * @param cellSize - Size of each grid cell in pixels.
    */
   draw(ctx: CanvasRenderingContext2D, snake: Snake, cellSize: number): void {
     const segments = snake.segments;
@@ -28,13 +25,23 @@ export class SnakeRenderer {
       const inset = 1;
       const radius = 4;
 
-      ctx.save();
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 8;
+      // Subtle shadow for depth.
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      this.roundRect(ctx, px + inset + 1, py + inset + 1, cellSize - inset * 2, cellSize - inset * 2, radius);
+      ctx.fill();
+
+      // Body segment.
       ctx.fillStyle = color;
       this.roundRect(ctx, px + inset, py + inset, cellSize - inset * 2, cellSize - inset * 2, radius);
       ctx.fill();
-      ctx.restore();
+
+      // Subtle highlight on top-left.
+      const hlGrad = ctx.createLinearGradient(px, py, px + cellSize, py + cellSize);
+      hlGrad.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+      hlGrad.addColorStop(0.5, 'transparent');
+      ctx.fillStyle = hlGrad;
+      this.roundRect(ctx, px + inset, py + inset, cellSize - inset * 2, cellSize - inset * 2, radius);
+      ctx.fill();
     }
 
     // Draw head.
@@ -45,14 +52,29 @@ export class SnakeRenderer {
     const centerY = hy + cellSize / 2;
     const headRadius = cellSize / 2 - 1;
 
-    ctx.save();
-    ctx.shadowColor = SNAKE_HEAD;
-    ctx.shadowBlur = 15;
+    // Head shadow.
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+    ctx.beginPath();
+    ctx.arc(centerX + 1, centerY + 1, headRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Head body.
     ctx.fillStyle = SNAKE_HEAD;
     ctx.beginPath();
     ctx.arc(centerX, centerY, headRadius, 0, Math.PI * 2);
     ctx.fill();
-    ctx.restore();
+
+    // Head highlight.
+    const headGrad = ctx.createRadialGradient(
+      centerX - headRadius * 0.25, centerY - headRadius * 0.25, 0,
+      centerX, centerY, headRadius,
+    );
+    headGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+    headGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = headGrad;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, headRadius, 0, Math.PI * 2);
+    ctx.fill();
 
     // Draw eyes based on direction.
     this.drawEyes(ctx, centerX, centerY, headRadius, snake.direction);
@@ -119,7 +141,7 @@ export class SnakeRenderer {
     ctx.fill();
 
     // Pupils shifted in the movement direction.
-    ctx.fillStyle = '#0a0a0a';
+    ctx.fillStyle = '#333333';
     ctx.beginPath();
     ctx.arc(e1x + px * 0.8, e1y + py * 0.8, pupilRadius, 0, Math.PI * 2);
     ctx.fill();

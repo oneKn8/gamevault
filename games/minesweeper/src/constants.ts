@@ -9,19 +9,19 @@ export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
 export const HEADER_HEIGHT = 60;
 export const PADDING = 16;
 
-// Colors for numbers 1-8
+// Colors for numbers 1-8 (classic Minesweeper palette)
 export const NUMBER_COLORS: string[] = [
-  '#2196F3', // 1 - blue
-  '#4CAF50', // 2 - green
-  '#f44336', // 3 - red
-  '#9C27B0', // 4 - purple
-  '#FF9800', // 5 - orange
-  '#00BCD4', // 6 - cyan
-  '#795548', // 7 - brown
-  '#607D8B', // 8 - grey
+  '#1565C0', // 1 - blue
+  '#2E7D32', // 2 - green
+  '#C62828', // 3 - red
+  '#6A1B9A', // 4 - purple
+  '#E65100', // 5 - orange
+  '#00838F', // 6 - cyan
+  '#4E342E', // 7 - brown
+  '#546E7A', // 8 - grey
 ];
 
-export const BG = '#0a0a0a';
-export const TILE_HIDDEN = '#2a2a3a';
-export const TILE_REVEALED = '#1a1a2a';
-export const TILE_HOVER = '#3a3a4a';
+export const BG = '#e0e0e0';
+export const TILE_HIDDEN = '#c8c8c8';
+export const TILE_REVEALED = '#d6d6d6';
+export const TILE_HOVER = '#d0d0d0';
