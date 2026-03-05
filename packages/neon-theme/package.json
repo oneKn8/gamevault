@@ -1,0 +1,19 @@
+{
+  "name": "@gamevault/neon-theme",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./colors": "./src/colors.ts",
+    "./tailwind-preset": "./src/tailwind-preset.ts",
+    "./canvas/glow": "./src/canvas/glow.ts",
+    "./canvas/particles": "./src/canvas/particles.ts",
+    "./canvas/text": "./src/canvas/text.ts",
+    "./css/variables.css": "./src/css/variables.css"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

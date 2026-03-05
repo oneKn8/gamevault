@@ -1,0 +1,26 @@
+:root {
+  --neon-bg: #05050f;
+  --neon-bg-light: #0a0a1a;
+  --neon-bg-card: #0d0d1f;
+
+  --neon-blue: #0066ff;
+  --neon-blue-glow: #3399ff;
+  --neon-cyan: #00ddff;
+  --neon-cyan-glow: #33eeff;
+  --neon-pink: #ff77cc;
+  --neon-pink-glow: #ff99dd;
+  --neon-yellow: #ffe000;
+  --neon-yellow-glow: #ffee55;
+  --neon-red: #ff1a1a;
+  --neon-red-glow: #ff4444;
+  --neon-orange: #ffaa33;
+  --neon-green: #33ff66;
+  --neon-purple: #aa55ff;
+
+  --hud-text: #e0e8ff;
+  --hud-label: #5577aa;
+  --hud-dim: #667799;
+
+  --font-display: 'Orbitron', sans-serif;
+  --font-retro: 'Press Start 2P', monospace;
+}
