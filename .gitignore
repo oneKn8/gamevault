@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.next/
+.turbo/
+*.tsbuildinfo
+.env
+.env.local
+.vercel
+
+# Original standalone game (monorepo copy lives in games/)
+/neon-pacman/
+/research/
+apps/web/pnpm-lock.yaml
+apps/web/pnpm-workspace.yaml
+apps/web/README.md
