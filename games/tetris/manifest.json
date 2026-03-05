@@ -1,0 +1,16 @@
+{
+  "id": "tetris",
+  "name": "Tetris",
+  "description": "Classic block-stacking puzzle with stunning 3D visuals. Clear lines to score big.",
+  "category": "puzzle",
+  "tags": ["puzzle", "classic", "single-player", "arcade"],
+  "thumbnail": "/thumbnails/tetris.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "modes": ["solo"],
+    "roomType": "tetris"
+  },
+  "version": "1.0.0"
+}

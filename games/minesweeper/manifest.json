@@ -1,0 +1,16 @@
+{
+  "id": "minesweeper",
+  "name": "Minesweeper",
+  "description": "Classic minesweeper with tile flip animations. Uncover the board without hitting mines.",
+  "category": "puzzle",
+  "tags": ["puzzle", "classic", "single-player", "strategy"],
+  "thumbnail": "/thumbnails/minesweeper.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "modes": ["solo"],
+    "roomType": "minesweeper"
+  },
+  "version": "1.0.0"
+}

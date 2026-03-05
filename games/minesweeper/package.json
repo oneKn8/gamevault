@@ -1,0 +1,16 @@
+{
+  "name": "@gamevault/minesweeper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "esbuild src/main.ts --bundle --outfile=dist/bundle.js --sourcemap --watch --serve=3007 --servedir=dist",
+    "build": "esbuild src/main.ts --bundle --outfile=dist/bundle.js --minify --sourcemap && node scripts/copy.mjs"
+  },
+  "dependencies": {
+    "@gamevault/game-sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.7.0"
+  }
+}

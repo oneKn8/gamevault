@@ -1,0 +1,16 @@
+{
+  "id": "snake",
+  "name": "Snake",
+  "description": "Classic snake game with neon glow effects. Eat food to grow, avoid walls and yourself.",
+  "category": "arcade",
+  "tags": ["arcade", "classic", "single-player"],
+  "thumbnail": "/thumbnails/snake.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "modes": ["solo"],
+    "roomType": "snake"
+  },
+  "version": "1.0.0"
+}
