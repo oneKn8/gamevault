@@ -29,7 +29,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
 
     const host = new GameHost({
       onReady: (version) => {
-        console.log(`[GameVault] ${gameId} v${version} ready`);
+        void version;
         const player = session?.user
           ? {
               id: session.user.id,
@@ -57,8 +57,8 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
           console.error("[GameVault] Failed to submit score");
         }
       },
-      onAchievementUnlock: (id) => {
-        console.log(`[GameVault] Achievement unlocked: ${id}`);
+      onAchievementUnlock: (_id) => {
+        // Phase 3: persist achievement unlock
       },
     });
 
@@ -177,7 +177,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
           onLoad={handleLoad}
           className="h-full w-full border-0"
           allow="autoplay; fullscreen"
-          sandbox="allow-scripts allow-same-origin allow-popups"
+          sandbox="allow-scripts allow-same-origin"
           title={`${gameId} game`}
         />
         {feedback && (

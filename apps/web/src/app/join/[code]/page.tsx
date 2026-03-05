@@ -8,7 +8,6 @@ export default async function JoinPage({
   const { code } = await params;
 
   // Phase 3: Look up room code in Redis -> redirect to game
-  // For now, just redirect to homepage
-  console.log(`Room code lookup: ${code}`);
+  void code;
   redirect("/");
 }

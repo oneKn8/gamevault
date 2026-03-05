@@ -21,7 +21,9 @@ export function getGameManifests(): GameManifest[] {
       const manifest: GameManifest = JSON.parse(raw);
       games.push(manifest);
     } catch {
-      console.warn(`Failed to parse manifest for ${dir.name}`);
+      if (process.env.NODE_ENV === "development") {
+        console.warn(`Failed to parse manifest for ${dir.name}`);
+      }
     }
   }
 
