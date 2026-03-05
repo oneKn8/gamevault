@@ -5,6 +5,7 @@ import { updateUserXp, getUserById } from "@gamevault/db/queries/users";
 import { activity } from "@gamevault/db/schema";
 import { getDb } from "@gamevault/db/client";
 import { getRedis } from "@/lib/redis";
+import { rateLimit } from "@/lib/rate-limit";
 
 function calculateLevel(xp: number): number {
   // 100 XP per level, increasing by 50 each level
@@ -20,6 +21,15 @@ function calculateLevel(xp: number): number {
 }
 
 export async function POST(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const { limited } = rateLimit(ip);
+  if (limited) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429 }
+    );
+  }
+
   const body = await req.json().catch(() => null);
 
   if (!body || typeof body.gameId !== "string" || typeof body.score !== "number") {

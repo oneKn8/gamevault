@@ -2,8 +2,18 @@ import { NextRequest, NextResponse } from "next/server";
 import { getRedis } from "@/lib/redis";
 import { getTopScores } from "@gamevault/db/queries/scores";
 import { getUserById } from "@gamevault/db/queries/users";
+import { rateLimit } from "@/lib/rate-limit";
 
 export async function GET(req: NextRequest) {
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const { limited } = rateLimit(ip);
+  if (limited) {
+    return NextResponse.json(
+      { error: "Too many requests" },
+      { status: 429 }
+    );
+  }
+
   const { searchParams } = req.nextUrl;
   const gameId = searchParams.get("gameId");
   const period = searchParams.get("period") ?? "alltime";
