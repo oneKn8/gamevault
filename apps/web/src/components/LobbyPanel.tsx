@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 
 interface LobbyPlayer {
   id: string;
@@ -10,28 +10,27 @@ interface LobbyPlayer {
 
 interface LobbyPanelProps {
   roomCode: string;
-  gameId: string;
   serverUrl: string;
   username: string;
-  onGameStart: (serverUrl: string, roomCode: string) => void;
+  onGameStart: () => void;
 }
 
 export function LobbyPanel({
   roomCode,
-  gameId,
   serverUrl,
   username,
   onGameStart,
 }: LobbyPanelProps) {
   const [players, setPlayers] = useState<LobbyPlayer[]>([]);
   const [phase, setPhase] = useState<string>("waiting");
-  const [ws, setWs] = useState<WebSocket | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const wsUrl = serverUrl.replace(/^http/, "ws");
     const socket = new WebSocket(wsUrl);
+    wsRef.current = socket;
 
     socket.onopen = () => {
       socket.send(
@@ -58,7 +57,7 @@ export function LobbyPanel({
             setPhase(msg.phase);
             break;
           case "GAME_START":
-            onGameStart(serverUrl, roomCode);
+            onGameStart();
             break;
           case "ERROR":
             setError(msg.message);
@@ -73,19 +72,19 @@ export function LobbyPanel({
       setError("Disconnected from server");
     };
 
-    setWs(socket);
-
     return () => {
       socket.close();
+      wsRef.current = null;
     };
   }, [serverUrl, roomCode, username, onGameStart]);
 
   const handleReady = useCallback(() => {
+    const ws = wsRef.current;
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify({ type: "READY" }));
       setIsReady(true);
     }
-  }, [ws]);
+  }, []);
 
   const handleCopyCode = useCallback(() => {
     navigator.clipboard.writeText(roomCode);

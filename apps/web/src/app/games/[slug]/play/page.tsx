@@ -15,7 +15,7 @@ export default async function PlayPage({
   searchParams: Promise<{ mode?: string; room?: string }>;
 }) {
   const { slug } = await params;
-  const { mode, room } = await searchParams;
+  const { mode } = await searchParams;
   const game = getGameBySlug(slug);
   if (!game) notFound();
 

@@ -52,12 +52,9 @@ export function MultiplayerPlayClient({
     setPhase("lobby");
   }, []);
 
-  const handleGameStart = useCallback(
-    (_serverUrl: string, _roomCode: string) => {
-      setPhase("playing");
-    },
-    [],
-  );
+  const handleGameStart = useCallback(() => {
+    setPhase("playing");
+  }, []);
 
   if (phase === "playing") {
     return (
@@ -81,7 +78,6 @@ export function MultiplayerPlayClient({
       <div className="flex min-h-[60vh] items-center justify-center p-8">
         <LobbyPanel
           roomCode={roomCode}
-          gameId={gameId}
           serverUrl={GAME_SERVER_URL}
           username={username}
           onGameStart={handleGameStart}
