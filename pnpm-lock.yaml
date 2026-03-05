@@ -32,6 +32,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.36.3
         version: 1.36.3
+      drizzle-orm:
+        specifier: ^0.39.3
+        version: 0.39.3(@neondatabase/serverless@0.10.4)(@types/pg@8.11.6)
       next:
         specifier: 16.1.6
         version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
