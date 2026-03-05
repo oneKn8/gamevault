@@ -1,5 +1,8 @@
 node_modules/
 dist/
+!games/*/dist/
+games/*/dist/bundle.js
+games/*/dist/bundle.js.map
 .next/
 .turbo/
 *.tsbuildinfo

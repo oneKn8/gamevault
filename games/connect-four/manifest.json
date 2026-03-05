@@ -1,0 +1,16 @@
+{
+  "id": "connect-four",
+  "name": "Connect Four",
+  "description": "Drop discs to connect four in a row. Play against a smart AI opponent.",
+  "category": "strategy",
+  "tags": ["strategy", "classic", "single-player", "two-player", "neon"],
+  "thumbnail": "/thumbnails/connect-four.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 2,
+    "modes": ["solo", "versus"],
+    "roomType": "connect-four"
+  },
+  "version": "1.0.0"
+}
