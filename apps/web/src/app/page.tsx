@@ -24,6 +24,7 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <h1 className="sr-only">GameVault - Free Browser Games</h1>
       {/* Hero Carousel */}
       <section className="mb-12 animate-fade-in">
         <HeroCarousel games={games} />

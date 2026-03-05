@@ -5,9 +5,33 @@ const categories = ["All", "Arcade", "Strategy", "Puzzle", "Party"];
 
 export default function GamesPage() {
   const games = getGameManifests();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://gamevault.gg";
+
+  const collectionJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Browse Games",
+    description:
+      "Pick a game and start playing instantly. No downloads required.",
+    url: `${siteUrl}/games`,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: games.map((g, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${siteUrl}/games/${g.id}`,
+        name: g.name,
+      })),
+    },
+  };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
+      />
+
       <div className="mb-2">
         <h1 className="text-2xl font-bold text-text">Browse Games</h1>
         <p className="mt-1 text-sm text-text-muted">
