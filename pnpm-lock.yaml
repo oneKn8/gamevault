@@ -111,6 +111,25 @@ importers:
         specifier: ^5.7.0
         version: 5.9.3
 
+  games/gridlock:
+    dependencies:
+      '@gamevault/game-sdk':
+        specifier: workspace:*
+        version: link:../../packages/game-sdk
+      three:
+        specifier: ^0.172.0
+        version: 0.172.0
+    devDependencies:
+      '@types/three':
+        specifier: ^0.172.0
+        version: 0.172.0
+      esbuild:
+        specifier: ^0.24.0
+        version: 0.24.2
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
   games/minesweeper:
     dependencies:
       '@gamevault/game-sdk':
@@ -129,6 +148,22 @@ importers:
       '@gamevault/game-sdk':
         specifier: workspace:*
         version: link:../../packages/game-sdk
+    devDependencies:
+      esbuild:
+        specifier: ^0.24.0
+        version: 0.24.2
+      typescript:
+        specifier: ^5.7.0
+        version: 5.9.3
+
+  games/rift:
+    dependencies:
+      '@gamevault/game-sdk':
+        specifier: workspace:*
+        version: link:../../packages/game-sdk
+      '@gamevault/rift-shared':
+        specifier: workspace:*
+        version: link:../../packages/rift-shared
     devDependencies:
       esbuild:
         specifier: ^0.24.0
@@ -201,6 +236,8 @@ importers:
       typescript:
         specifier: ^5.7.0
         version: 5.9.3
+
+  packages/rift-shared: {}
 
   packages/shared-types:
     devDependencies:

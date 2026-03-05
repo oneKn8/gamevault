@@ -1,0 +1,16 @@
+{
+  "id": "gridlock",
+  "name": "Gridlock",
+  "description": "Simultaneous-turn territory control. Plan moves in secret, then watch the chaos unfold. Collisions mean mutual death.",
+  "category": "strategy",
+  "tags": ["strategy", "original", "single-player", "territory"],
+  "thumbnail": "/thumbnails/gridlock.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "modes": ["solo"],
+    "roomType": "gridlock"
+  },
+  "version": "1.0.0"
+}
