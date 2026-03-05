@@ -168,11 +168,16 @@ export default async function GameDetailPage({
             <Link href={`/games/${game.id}/play`}>
               <NeonButton variant="highlight">Play Now</NeonButton>
             </Link>
-            {game.multiplayer && (
-              <span className="text-sm text-text-muted">
-                {game.multiplayer.minPlayers}-{game.multiplayer.maxPlayers}{" "}
-                players ({game.multiplayer.modes.join(", ")})
-              </span>
+            {game.multiplayer && game.multiplayer.maxPlayers > 1 && (
+              <>
+                <Link href={`/games/${game.id}/play?mode=multiplayer`}>
+                  <NeonButton variant="highlight">Multiplayer</NeonButton>
+                </Link>
+                <span className="text-sm text-text-muted">
+                  {game.multiplayer.minPlayers}-{game.multiplayer.maxPlayers}{" "}
+                  players ({game.multiplayer.modes.join(", ")})
+                </span>
+              </>
             )}
           </div>
         </div>

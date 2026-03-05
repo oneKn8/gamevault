@@ -4,14 +4,21 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 import { GameHost } from "@gamevault/game-sdk";
 
+interface MultiplayerConfig {
+  serverUrl: string;
+  roomCode: string;
+  authToken?: string;
+}
+
 interface GameEmbedProps {
   gameId: string;
   gameName: string;
   src: string;
   onQuit: () => void;
+  multiplayerConfig?: MultiplayerConfig;
 }
 
-export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
+export function GameEmbed({ gameId, gameName, src, onQuit, multiplayerConfig }: GameEmbedProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const hostRef = useRef<GameHost | null>(null);
   const { data: session } = useSession();
@@ -40,6 +47,13 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
             }
           : { id: "guest", username: "Guest", level: 1 };
         host.sendInit(player, false);
+        if (multiplayerConfig) {
+          host.sendMultiplayerInit(
+            multiplayerConfig.serverUrl,
+            multiplayerConfig.roomCode,
+            multiplayerConfig.authToken,
+          );
+        }
       },
       onScoreSubmit: async (score, metadata) => {
         try {
@@ -66,7 +80,7 @@ export function GameEmbed({ gameId, gameName, src, onQuit }: GameEmbedProps) {
 
     host.attach(iframeRef.current);
     hostRef.current = host;
-  }, [gameId, session]);
+  }, [gameId, session, multiplayerConfig]);
 
   useEffect(() => {
     return () => {

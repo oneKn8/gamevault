@@ -3,7 +3,14 @@ export type PortalToGameMessage =
   | { type: 'INIT'; payload: { player: PlayerData; settings: GameSettings } }
   | { type: 'PAUSE' }
   | { type: 'RESUME' }
-  | { type: 'MUTE'; payload: { muted: boolean } };
+  | { type: 'MUTE'; payload: { muted: boolean } }
+  | { type: 'MULTIPLAYER_INIT'; payload: MultiplayerConfig };
+
+export interface MultiplayerConfig {
+  serverUrl: string;
+  roomCode: string;
+  authToken?: string;
+}
 
 // Game -> Portal messages
 export type GameToPortalMessage =

@@ -5,6 +5,7 @@ import { SnakeCover } from "./SnakeCover";
 import { MinesweeperCover } from "./MinesweeperCover";
 import { TetrisCover } from "./TetrisCover";
 import { GridlockCover } from "./GridlockCover";
+import { RiftCover } from "./RiftCover";
 
 const coverMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "neon-pacman": PacManCover,
@@ -14,6 +15,7 @@ const coverMap: Record<string, React.ComponentType<{ className?: string }>> = {
   minesweeper: MinesweeperCover,
   tetris: TetrisCover,
   gridlock: GridlockCover,
+  rift: RiftCover,
 };
 
 function DefaultCover({ className }: { className?: string }) {

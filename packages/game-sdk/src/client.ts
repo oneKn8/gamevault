@@ -6,6 +6,7 @@
 import {
   type PlayerData,
   type GameSettings,
+  type MultiplayerConfig,
   type PortalToGameMessage,
   type GameToPortalMessage,
   GAMEVAULT_MSG_PREFIX,
@@ -16,6 +17,7 @@ const isEmbedded = typeof window !== 'undefined' && window.parent !== window;
 let player: PlayerData = { id: 'guest', username: 'Guest', level: 1 };
 let settings: GameSettings = { muted: false };
 let initialized = false;
+let multiplayerConfig: MultiplayerConfig | null = null;
 
 type EventHandler = (data: unknown) => void;
 const listeners = new Map<string, EventHandler[]>();
@@ -47,6 +49,10 @@ function handlePortalMessage(event: MessageEvent): void {
     case 'MUTE':
       settings.muted = msg.payload.muted;
       emit('mute', { muted: settings.muted });
+      break;
+    case 'MULTIPLAYER_INIT':
+      multiplayerConfig = msg.payload;
+      emit('multiplayerInit', multiplayerConfig);
       break;
   }
 }
@@ -86,6 +92,10 @@ export const GameVault = {
 
   getSettings(): GameSettings {
     return settings;
+  },
+
+  getMultiplayerConfig(): MultiplayerConfig | null {
+    return multiplayerConfig;
   },
 
   submitScore(score: number, metadata?: Record<string, unknown>): void {

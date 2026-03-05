@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 
+const GAME_SERVER_URL =
+  process.env.GAME_SERVER_URL ?? "http://localhost:3100";
+
 export default async function JoinPage({
   params,
 }: {
@@ -7,7 +10,17 @@ export default async function JoinPage({
 }) {
   const { code } = await params;
 
-  // Phase 3: Look up room code in Redis -> redirect to game
-  void code;
+  try {
+    const res = await fetch(`${GAME_SERVER_URL}/rooms/${encodeURIComponent(code)}`, {
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const room = await res.json();
+      redirect(`/games/${room.gameId}/play?mode=multiplayer&room=${code}`);
+    }
+  } catch {
+    // Game server unavailable
+  }
+
   redirect("/");
 }

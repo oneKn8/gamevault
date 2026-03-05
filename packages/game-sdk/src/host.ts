@@ -55,6 +55,13 @@ export class GameHost {
     this.send({ type: 'MUTE', payload: { muted } });
   }
 
+  sendMultiplayerInit(serverUrl: string, roomCode: string, authToken?: string): void {
+    this.send({
+      type: 'MULTIPLAYER_INIT',
+      payload: { serverUrl, roomCode, authToken },
+    });
+  }
+
   private send(msg: Record<string, unknown>): void {
     if (this.iframe?.contentWindow) {
       this.iframe.contentWindow.postMessage(

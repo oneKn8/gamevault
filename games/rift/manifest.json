@@ -1,0 +1,16 @@
+{
+  "id": "rift",
+  "name": "RIFT: Phase-Shift Arena",
+  "description": "Shift between Light and Shadow dimensions to control Anchors and outmaneuver your opponents in this top-down arena.",
+  "category": "io",
+  "tags": ["arena", "multiplayer", "action", "dimensions", "io"],
+  "thumbnail": "/thumbnails/rift.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 2,
+    "maxPlayers": 10,
+    "modes": ["ffa"],
+    "roomType": "rift"
+  },
+  "version": "1.0.0"
+}
