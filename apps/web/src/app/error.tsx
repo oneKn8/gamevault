@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 export default function ErrorPage({
   reset,
 }: {
@@ -22,12 +24,12 @@ export default function ErrorPage({
           >
             Try again
           </button>
-          <a
+          <Link
             href="/"
             className="text-sm text-text-muted transition-colors hover:text-text"
           >
             Go home
-          </a>
+          </Link>
         </div>
       </div>
     </div>

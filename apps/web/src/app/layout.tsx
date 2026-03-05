@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 import { Providers } from "@/components/Providers";
 import { AuthButton } from "@/components/AuthButton";
 import { Footer } from "@/components/Footer";
@@ -73,27 +74,27 @@ export default function RootLayout({
         <Providers>
           <header className="sticky top-0 z-50 border-b border-border bg-bg/80 backdrop-blur-md">
             <nav aria-label="Main navigation" className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
-              <a href="/" className="flex items-center gap-1">
+              <Link href="/" className="flex items-center gap-1">
                 <span className="text-xl font-bold tracking-wider text-text">
                   GAME
                 </span>
                 <span className="text-xl font-bold tracking-wider text-accent">
                   VAULT
                 </span>
-              </a>
+              </Link>
               <div className="flex items-center gap-3 sm:gap-6">
-                <a
+                <Link
                   href="/games"
                   className="text-xs sm:text-sm text-text-secondary transition-colors hover:text-text"
                 >
                   Games
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/leaderboards"
                   className="text-xs sm:text-sm text-text-secondary transition-colors hover:text-text"
                 >
                   Leaderboards
-                </a>
+                </Link>
                 <AuthButton />
               </div>
             </nav>

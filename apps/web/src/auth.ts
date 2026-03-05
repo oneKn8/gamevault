@@ -11,12 +11,14 @@ import {
   verificationTokens,
 } from "@gamevault/db/schema";
 
+/* eslint-disable @typescript-eslint/no-explicit-any -- DrizzleAdapter types don't match Neon's pg client */
 const adapter = DrizzleAdapter(getDb() as any, {
   usersTable: users as any,
   accountsTable: accounts as any,
   sessionsTable: sessions as any,
   verificationTokensTable: verificationTokens as any,
-});
+} as any);
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter,

@@ -31,17 +31,38 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
   const [period, setPeriod] = useState<string>("alltime");
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchKey, setFetchKey] = useState(0);
+
+  const changePeriod = (newPeriod: string) => {
+    setPeriod(newPeriod);
+    setLoading(true);
+    setFetchKey((k) => k + 1);
+  };
 
   useEffect(() => {
-    setLoading(true);
-    fetch(`/api/leaderboard?gameId=${gameId}&period=${period}&limit=${limit}`)
+    let cancelled = false;
+    const controller = new AbortController();
+
+    fetch(`/api/leaderboard?gameId=${gameId}&period=${period}&limit=${limit}`, {
+      signal: controller.signal,
+    })
       .then((res) => res.json())
       .then((data) => {
-        setEntries(data.entries ?? []);
-        setLoading(false);
+        if (!cancelled) {
+          setEntries(data.entries ?? []);
+          setLoading(false);
+        }
       })
-      .catch(() => setLoading(false));
-  }, [gameId, period, limit]);
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+      controller.abort();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameId, limit, fetchKey]);
 
   return (
     <div className="rounded-lg border border-border bg-bg-raised p-4">
@@ -50,7 +71,7 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
         {periods.map((p) => (
           <button
             key={p.key}
-            onClick={() => setPeriod(p.key)}
+            onClick={() => changePeriod(p.key)}
             role="tab"
             aria-selected={period === p.key}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
