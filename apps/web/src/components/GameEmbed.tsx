@@ -80,7 +80,7 @@ export function GameEmbed({ gameId, src }: GameEmbedProps) {
         title={`${gameId} game`}
       />
       {feedback && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-lg border border-neon-cyan/30 bg-neon-bg/90 px-4 py-2 text-sm text-neon-cyan shadow-neon-cyan backdrop-blur-sm">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-lg border border-accent/30 bg-bg/90 px-4 py-2 text-sm text-accent backdrop-blur-sm">
           {feedback}
         </div>
       )}

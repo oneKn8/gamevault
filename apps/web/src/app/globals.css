@@ -1,56 +1,42 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-neon-bg: #05050f;
-  --color-neon-bg-light: #0a0a1a;
-  --color-neon-bg-card: #0d0d1f;
-  --color-neon-blue: #0066ff;
-  --color-neon-blue-glow: #3399ff;
-  --color-neon-cyan: #00ddff;
-  --color-neon-cyan-glow: #33eeff;
-  --color-neon-pink: #ff77cc;
-  --color-neon-pink-glow: #ff99dd;
-  --color-neon-yellow: #ffe000;
-  --color-neon-yellow-glow: #ffee55;
-  --color-neon-red: #ff1a1a;
-  --color-neon-green: #33ff66;
-  --color-neon-purple: #aa55ff;
-  --color-neon-orange: #ffaa33;
-  --color-hud-text: #e0e8ff;
-  --color-hud-label: #5577aa;
-  --color-hud-dim: #667799;
+  --color-bg: #0a0a0b;
+  --color-bg-raised: #111113;
+  --color-bg-overlay: #1a1a1d;
 
-  --font-display: 'Orbitron', sans-serif;
-  --font-retro: 'Press Start 2P', monospace;
+  --color-border: #2a2a2e;
+  --color-border-highlight: #3a3a3f;
 
-  --shadow-neon-blue: 0 0 10px #0066ff, 0 0 40px #3399ff40;
-  --shadow-neon-cyan: 0 0 10px #00ddff, 0 0 40px #33eeff40;
-  --shadow-neon-pink: 0 0 10px #ff77cc, 0 0 40px #ff99dd40;
-  --shadow-neon-yellow: 0 0 10px #ffe000, 0 0 40px #ffee5540;
-  --shadow-neon-green: 0 0 10px #33ff66, 0 0 40px #66ff9940;
-  --shadow-neon-purple: 0 0 10px #aa55ff, 0 0 40px #cc88ff40;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-muted: #4f46e5;
 
-  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
-  --animate-flicker: flicker 3s ease-in-out infinite;
-}
+  --color-secondary: #f59e0b;
+  --color-secondary-hover: #fbbf24;
 
-@keyframes pulse-glow {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
+  --color-text: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-muted: #71717a;
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92% { opacity: 1; }
-  93% { opacity: 0.3; }
-  94% { opacity: 1; }
-  96% { opacity: 0.5; }
-  97% { opacity: 1; }
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+  --color-info: #3b82f6;
+
+  --color-cat-arcade: #f59e0b;
+  --color-cat-puzzle: #a855f7;
+  --color-cat-strategy: #06b6d4;
+  --color-cat-io: #22c55e;
+  --color-cat-party: #ec4899;
+  --color-cat-word: #f97316;
+  --color-cat-card: #ef4444;
+  --color-cat-sports: #3b82f6;
 }
 
 body {
-  background: var(--color-neon-bg);
-  color: var(--color-hud-text);
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 /* Scrollbar styling */
@@ -59,10 +45,10 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--color-neon-bg);
+  background: var(--color-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-neon-blue);
+  background: var(--color-border-highlight);
   border-radius: 3px;
 }

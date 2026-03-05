@@ -2,15 +2,12 @@
 
 import { type ButtonHTMLAttributes } from "react";
 
-type Variant = "blue" | "cyan" | "pink" | "yellow" | "green" | "purple";
+type Variant = "primary" | "secondary" | "highlight";
 
 const variantStyles: Record<Variant, string> = {
-  blue: "border-neon-blue/40 bg-neon-blue/10 text-neon-blue hover:bg-neon-blue/20 hover:shadow-neon-blue",
-  cyan: "border-neon-cyan/40 bg-neon-cyan/10 text-neon-cyan hover:bg-neon-cyan/20 hover:shadow-neon-cyan",
-  pink: "border-neon-pink/40 bg-neon-pink/10 text-neon-pink hover:bg-neon-pink/20 hover:shadow-neon-pink",
-  yellow: "border-neon-yellow/40 bg-neon-yellow/10 text-neon-yellow hover:bg-neon-yellow/20 hover:shadow-neon-yellow",
-  green: "border-neon-green/40 bg-neon-green/10 text-neon-green hover:bg-neon-green/20 hover:shadow-neon-green",
-  purple: "border-neon-purple/40 bg-neon-purple/10 text-neon-purple hover:bg-neon-purple/20 hover:shadow-neon-purple",
+  primary: "border-accent bg-accent text-white hover:bg-accent-hover",
+  secondary: "border-border-highlight bg-transparent text-text-secondary hover:text-text hover:border-text-muted",
+  highlight: "border-secondary bg-secondary text-black font-semibold hover:bg-secondary-hover",
 };
 
 interface NeonButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -18,7 +15,7 @@ interface NeonButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export function NeonButton({
-  variant = "blue",
+  variant = "primary",
   className = "",
   children,
   ...props

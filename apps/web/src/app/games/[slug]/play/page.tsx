@@ -20,17 +20,17 @@ export default async function PlayPage({
   const gameSrc = `/games/${game.id}/index.html`;
 
   return (
-    <div className="fixed inset-0 top-16 bg-neon-bg">
+    <div className="fixed inset-0 top-16 bg-bg">
       {/* HUD bar */}
-      <div className="flex h-10 items-center justify-between border-b border-neon-blue/15 bg-neon-bg-card px-4">
+      <div className="flex h-10 items-center justify-between border-b border-border bg-bg-raised px-4">
         <a
           href={`/games/${game.id}`}
-          className="text-xs text-hud-dim hover:text-hud-text"
+          className="text-xs text-text-muted hover:text-text"
         >
           &larr; {game.name}
         </a>
         <div className="flex items-center gap-4">
-          <span className="font-[family-name:var(--font-retro)] text-[10px] text-neon-yellow">
+          <span className="font-mono text-[10px] text-secondary">
             {game.name.toUpperCase()}
           </span>
         </div>

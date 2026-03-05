@@ -7,7 +7,7 @@ export function AuthButton() {
 
   if (status === "loading") {
     return (
-      <div className="h-8 w-20 animate-pulse rounded-md bg-neon-blue/10" />
+      <div className="h-8 w-20 animate-pulse rounded-md bg-accent/10" />
     );
   }
 
@@ -16,23 +16,23 @@ export function AuthButton() {
       <div className="flex items-center gap-3">
         <a
           href={`/profile/${session.user.username}`}
-          className="flex items-center gap-2 text-sm text-hud-text transition-colors hover:text-neon-cyan"
+          className="flex items-center gap-2 text-sm text-text transition-colors hover:text-accent"
         >
           {session.user.image && (
             <img
               src={session.user.image}
               alt=""
-              className="h-7 w-7 rounded-full border border-neon-blue/30"
+              className="h-7 w-7 rounded-full border border-border"
             />
           )}
           <span>{session.user.username}</span>
-          <span className="text-xs text-hud-dim">
+          <span className="text-xs text-text-muted">
             Lv.{session.user.level}
           </span>
         </a>
         <button
           onClick={() => signOut()}
-          className="rounded-md border border-neon-pink/40 bg-neon-pink/10 px-3 py-1 text-xs text-neon-pink transition-all hover:bg-neon-pink/20"
+          className="rounded-md border border-border-highlight bg-transparent px-3 py-1 text-xs text-text-secondary transition-all hover:text-text hover:border-text-muted"
         >
           Sign Out
         </button>
@@ -43,7 +43,7 @@ export function AuthButton() {
   return (
     <button
       onClick={() => signIn()}
-      className="rounded-md border border-neon-blue/40 bg-neon-blue/10 px-4 py-1.5 text-sm font-medium text-neon-blue transition-all hover:bg-neon-blue/20 hover:shadow-neon-blue"
+      className="rounded-md border border-accent bg-accent px-4 py-1.5 text-sm font-medium text-white transition-all hover:bg-accent-hover"
     >
       Sign In
     </button>

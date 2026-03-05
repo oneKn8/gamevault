@@ -23,21 +23,21 @@ export default async function GameDetailPage({
       <div className="mb-8">
         <Link
           href="/games"
-          className="mb-4 inline-block text-sm text-hud-dim hover:text-hud-text"
+          className="mb-4 inline-block text-sm text-text-muted hover:text-text"
         >
           &larr; Back to games
         </Link>
-        <h1 className="mb-2 font-[family-name:var(--font-display)] text-3xl font-bold text-hud-text">
+        <h1 className="mb-2 text-3xl font-bold text-text">
           {game.name}
         </h1>
-        <p className="mb-4 text-hud-dim">{game.description}</p>
+        <p className="mb-4 text-text-muted">{game.description}</p>
 
         <div className="flex items-center gap-3">
           <Link href={`/games/${game.id}/play`}>
-            <NeonButton variant="yellow">Play Now</NeonButton>
+            <NeonButton variant="highlight">Play Now</NeonButton>
           </Link>
           {game.multiplayer && (
-            <span className="text-sm text-hud-dim">
+            <span className="text-sm text-text-muted">
               {game.multiplayer.minPlayers}-{game.multiplayer.maxPlayers} players
               ({game.multiplayer.modes.join(", ")})
             </span>
@@ -50,7 +50,7 @@ export default async function GameDetailPage({
         {game.tags.map((tag) => (
           <span
             key={tag}
-            className="rounded border border-hud-dim/20 px-2 py-0.5 text-xs text-hud-dim"
+            className="rounded border border-border px-2 py-0.5 text-xs text-text-muted"
           >
             {tag}
           </span>
@@ -59,7 +59,7 @@ export default async function GameDetailPage({
 
       {/* Leaderboard */}
       <section>
-        <h2 className="mb-4 font-[family-name:var(--font-display)] text-lg font-semibold text-hud-text">
+        <h2 className="mb-4 text-lg font-semibold text-text">
           Leaderboard
         </h2>
         <Leaderboard gameId={game.id} />

@@ -83,20 +83,20 @@ export default async function ProfilePage({
           <img
             src={user.image}
             alt=""
-            className="h-16 w-16 rounded-full border-2 border-neon-blue/30"
+            className="h-16 w-16 rounded-full border-2 border-border-highlight"
           />
         )}
         <div>
-          <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-hud-text">
+          <h1 className="text-2xl font-bold text-text">
             {user.username ?? user.name}
           </h1>
           <div className="flex items-center gap-3 text-sm">
-            <span className="rounded bg-neon-blue/20 px-2 py-0.5 text-neon-blue">
+            <span className="rounded bg-accent/20 px-2 py-0.5 text-accent">
               Level {user.level}
             </span>
-            <span className="text-hud-dim">{user.xp.toLocaleString()} XP</span>
+            <span className="text-text-muted">{user.xp.toLocaleString()} XP</span>
             {user.streakDays > 0 && (
-              <span className="text-neon-yellow">{user.streakDays} day streak</span>
+              <span className="text-secondary">{user.streakDays} day streak</span>
             )}
           </div>
         </div>
@@ -104,57 +104,57 @@ export default async function ProfilePage({
 
       {/* XP progress bar */}
       <div className="mb-8">
-        <div className="mb-1 flex justify-between text-xs text-hud-dim">
+        <div className="mb-1 flex justify-between text-xs text-text-muted">
           <span>Level {user.level}</span>
           <span>Level {user.level + 1}</span>
         </div>
-        <div className="h-2 overflow-hidden rounded-full bg-neon-bg-light">
+        <div className="h-2 overflow-hidden rounded-full bg-bg-overlay">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-neon-blue to-neon-cyan transition-all"
+            className="h-full rounded-full bg-gradient-to-r from-accent to-accent-hover transition-all"
             style={{ width: `${xpPercent}%` }}
           />
         </div>
-        <p className="mt-1 text-right text-xs text-hud-dim">
+        <p className="mt-1 text-right text-xs text-text-muted">
           {currentLevelXp}/{neededXp} XP
         </p>
       </div>
 
       {/* Stats */}
       <div className="mb-8 grid grid-cols-3 gap-4">
-        <div className="rounded-lg border border-neon-blue/15 bg-neon-bg-card p-4 text-center">
-          <p className="font-[family-name:var(--font-retro)] text-lg text-neon-cyan">
+        <div className="rounded-lg border border-border bg-bg-raised p-4 text-center">
+          <p className="font-mono text-lg text-accent">
             {scoreStats?.totalScores ?? 0}
           </p>
-          <p className="text-xs text-hud-dim">Total Scores</p>
+          <p className="text-xs text-text-muted">Total Scores</p>
         </div>
-        <div className="rounded-lg border border-neon-blue/15 bg-neon-bg-card p-4 text-center">
-          <p className="font-[family-name:var(--font-retro)] text-lg text-neon-cyan">
+        <div className="rounded-lg border border-border bg-bg-raised p-4 text-center">
+          <p className="font-mono text-lg text-accent">
             {scoreStats?.gamesPlayed ?? 0}
           </p>
-          <p className="text-xs text-hud-dim">Games Played</p>
+          <p className="text-xs text-text-muted">Games Played</p>
         </div>
-        <div className="rounded-lg border border-neon-blue/15 bg-neon-bg-card p-4 text-center">
-          <p className="font-[family-name:var(--font-retro)] text-lg text-neon-cyan">
+        <div className="rounded-lg border border-border bg-bg-raised p-4 text-center">
+          <p className="font-mono text-lg text-accent">
             {user.streakDays}
           </p>
-          <p className="text-xs text-hud-dim">Day Streak</p>
+          <p className="text-xs text-text-muted">Day Streak</p>
         </div>
       </div>
 
       {/* Best scores per game */}
       {bestScores.length > 0 && (
         <section className="mb-8">
-          <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-semibold text-hud-text">
+          <h2 className="mb-3 text-lg font-semibold text-text">
             Best Scores
           </h2>
           <div className="space-y-2">
             {bestScores.map((s) => (
               <div
                 key={s.gameId}
-                className="flex items-center justify-between rounded-md border border-neon-blue/10 bg-neon-bg-card px-4 py-2"
+                className="flex items-center justify-between rounded-md border border-border bg-bg-raised px-4 py-2"
               >
-                <span className="text-sm text-hud-text">{s.gameId}</span>
-                <span className="font-[family-name:var(--font-retro)] text-xs text-neon-cyan">
+                <span className="text-sm text-text">{s.gameId}</span>
+                <span className="font-mono text-xs text-accent">
                   {s.bestScore?.toLocaleString()}
                 </span>
               </div>
@@ -166,30 +166,30 @@ export default async function ProfilePage({
       {/* Recent activity */}
       {recentActivity.length > 0 && (
         <section>
-          <h2 className="mb-3 font-[family-name:var(--font-display)] text-lg font-semibold text-hud-text">
+          <h2 className="mb-3 text-lg font-semibold text-text">
             Recent Activity
           </h2>
           <div className="space-y-2">
             {recentActivity.map((a) => (
               <div
                 key={a.id}
-                className="flex items-center gap-3 rounded-md border border-neon-blue/10 bg-neon-bg-card px-4 py-2"
+                className="flex items-center gap-3 rounded-md border border-border bg-bg-raised px-4 py-2"
               >
-                <span className="text-xs text-hud-dim">
+                <span className="text-xs text-text-muted">
                   {a.type === "score" && "Scored"}
                   {a.type === "achievement" && "Unlocked"}
                   {a.type === "level_up" && "Leveled up"}
                   {a.type === "streak" && "Streak"}
                 </span>
                 {a.gameId && (
-                  <span className="text-xs text-hud-label">{a.gameId}</span>
+                  <span className="text-xs text-text-secondary">{a.gameId}</span>
                 )}
                 {getActivityScore(a.data) !== null && (
-                  <span className="font-[family-name:var(--font-retro)] text-xs text-neon-cyan">
+                  <span className="font-mono text-xs text-accent">
                     {getActivityScore(a.data)!.toLocaleString()}
                   </span>
                 )}
-                <span className="ml-auto text-xs text-hud-dim">
+                <span className="ml-auto text-xs text-text-muted">
                   {a.createdAt.toLocaleDateString()}
                 </span>
               </div>

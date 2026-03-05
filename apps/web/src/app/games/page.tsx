@@ -6,7 +6,7 @@ export default function GamesPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-8 font-[family-name:var(--font-display)] text-2xl font-bold text-hud-text">
+      <h1 className="mb-8 text-2xl font-bold text-text">
         All Games
       </h1>
       {games.length > 0 ? (
@@ -16,8 +16,8 @@ export default function GamesPage() {
           ))}
         </div>
       ) : (
-        <div className="rounded-lg border border-neon-blue/15 bg-neon-bg-card p-12 text-center">
-          <p className="text-hud-dim">No games available yet.</p>
+        <div className="rounded-lg border border-border bg-bg-raised p-12 text-center">
+          <p className="text-text-muted">No games available yet.</p>
         </div>
       )}
     </div>

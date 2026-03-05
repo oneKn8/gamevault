@@ -22,7 +22,7 @@ const periods = [
 ] as const;
 
 const rankStyles: Record<number, string> = {
-  1: "text-neon-yellow border-neon-yellow/30",
+  1: "text-secondary border-secondary/30",
   2: "text-gray-300 border-gray-300/30",
   3: "text-orange-400 border-orange-400/30",
 };
@@ -44,7 +44,7 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
   }, [gameId, period, limit]);
 
   return (
-    <div className="rounded-lg border border-neon-blue/20 bg-neon-bg-card p-4">
+    <div className="rounded-lg border border-border bg-bg-raised p-4">
       {/* Period tabs */}
       <div className="mb-4 flex gap-2">
         {periods.map((p) => (
@@ -53,8 +53,8 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
             onClick={() => setPeriod(p.key)}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
               period === p.key
-                ? "bg-neon-blue/20 text-neon-blue shadow-neon-blue"
-                : "text-hud-dim hover:text-hud-text"
+                ? "bg-accent/20 text-accent"
+                : "text-text-muted hover:text-text"
             }`}
           >
             {p.label}
@@ -65,16 +65,16 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
       {/* Entries */}
       {loading ? (
         <div className="flex h-32 items-center justify-center">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-neon-blue border-t-transparent" />
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-accent border-t-transparent" />
         </div>
       ) : entries.length === 0 ? (
-        <p className="py-8 text-center text-sm text-hud-dim">
+        <p className="py-8 text-center text-sm text-text-muted">
           No scores yet. Be the first to play!
         </p>
       ) : (
         <div className="space-y-1">
           {entries.map((entry) => {
-            const style = rankStyles[entry.rank] ?? "text-hud-text border-transparent";
+            const style = rankStyles[entry.rank] ?? "text-text border-transparent";
             return (
               <div
                 key={`${entry.userId}-${entry.rank}`}
@@ -82,7 +82,7 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
                   entry.rank <= 3 ? "bg-white/[0.02]" : ""
                 }`}
               >
-                <span className="w-8 text-center font-[family-name:var(--font-retro)] text-xs">
+                <span className="w-8 text-center font-mono text-xs">
                   {entry.rank <= 3 ? ["", "#1", "#2", "#3"][entry.rank] : `#${entry.rank}`}
                 </span>
                 {entry.avatarUrl && (
@@ -93,7 +93,7 @@ export function Leaderboard({ gameId, limit = 20 }: LeaderboardProps) {
                   />
                 )}
                 <span className="flex-1 text-sm">{entry.username}</span>
-                <span className="font-[family-name:var(--font-retro)] text-xs text-neon-cyan">
+                <span className="font-mono text-xs text-accent">
                   {entry.score.toLocaleString()}
                 </span>
               </div>
