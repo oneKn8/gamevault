@@ -1,11 +1,17 @@
 import { PacManCover } from "./PacManCover";
 import { ConnectFourCover } from "./ConnectFourCover";
 import { ChessCover } from "./ChessCover";
+import { SnakeCover } from "./SnakeCover";
+import { MinesweeperCover } from "./MinesweeperCover";
+import { TetrisCover } from "./TetrisCover";
 
 const coverMap: Record<string, React.ComponentType<{ className?: string }>> = {
   "neon-pacman": PacManCover,
   "connect-four": ConnectFourCover,
   chess: ChessCover,
+  snake: SnakeCover,
+  minesweeper: MinesweeperCover,
+  tetris: TetrisCover,
 };
 
 function DefaultCover({ className }: { className?: string }) {
