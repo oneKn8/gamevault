@@ -12,6 +12,7 @@
     "build:web": "turbo build --filter=@gamevault/web"
   },
   "devDependencies": {
+    "next": "16.1.6",
     "turbo": "^2"
   },
   "pnpm": {
