@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { RoomBrowser } from "@/components/RoomBrowser";
 import { LobbyPanel } from "@/components/LobbyPanel";
@@ -16,7 +16,7 @@ interface MultiplayerPlayClientProps {
   gameSrc: string;
 }
 
-type Phase = "browse" | "lobby" | "playing";
+type Phase = "solo" | "browse" | "lobby" | "playing";
 
 export function MultiplayerPlayClient({
   gameId,
@@ -24,8 +24,10 @@ export function MultiplayerPlayClient({
   gameSrc,
 }: MultiplayerPlayClientProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { data: session } = useSession();
-  const [phase, setPhase] = useState<Phase>("browse");
+  const initialMode = searchParams.get("mode") === "multiplayer" ? "browse" as Phase : "solo" as Phase;
+  const [phase, setPhase] = useState<Phase>(initialMode);
   const [roomCode, setRoomCode] = useState("");
 
   const username = session?.user?.username ?? "Guest";
@@ -56,7 +58,7 @@ export function MultiplayerPlayClient({
     setPhase("playing");
   }, []);
 
-  if (phase === "playing") {
+  if (phase === "solo" || phase === "playing") {
     return (
       <div className="fixed inset-0 top-16 bg-bg">
         <GameEmbed
@@ -64,10 +66,10 @@ export function MultiplayerPlayClient({
           gameName={gameName}
           src={gameSrc}
           onQuit={() => router.push(`/games/${gameId}`)}
-          multiplayerConfig={{
+          multiplayerConfig={phase === "playing" ? {
             serverUrl: GAME_SERVER_URL,
             roomCode,
-          }}
+          } : undefined}
         />
       </div>
     );

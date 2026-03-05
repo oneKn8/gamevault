@@ -9,20 +9,17 @@ export function generateStaticParams() {
 
 export default async function PlayPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ mode?: string; room?: string }>;
 }) {
   const { slug } = await params;
-  const { mode } = await searchParams;
   const game = getGameBySlug(slug);
   if (!game) notFound();
 
   const gameSrc = `/games/${game.id}/index.html`;
-  const isMultiplayer = game.multiplayer && game.multiplayer.maxPlayers > 1;
+  const isMultiplayer = !!(game.multiplayer && game.multiplayer.maxPlayers > 1);
 
-  if (isMultiplayer && mode === "multiplayer") {
+  if (isMultiplayer) {
     return (
       <MultiplayerPlayClient
         gameId={game.id}
