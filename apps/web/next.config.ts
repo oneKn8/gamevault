@@ -32,7 +32,7 @@ const nextConfig: NextConfig = {
         headers: [
           ...baseSecurityHeaders,
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
         ],
       },
     ];
