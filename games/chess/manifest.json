@@ -1,0 +1,16 @@
+{
+  "id": "chess",
+  "name": "Neon Chess",
+  "description": "Classic chess with neon cyberpunk visuals. Challenge the AI or play with a friend.",
+  "category": "strategy",
+  "tags": ["strategy", "classic", "single-player", "two-player", "chess", "neon"],
+  "thumbnail": "/thumbnails/chess.png",
+  "entry": "index.html",
+  "multiplayer": {
+    "minPlayers": 1,
+    "maxPlayers": 2,
+    "modes": ["solo", "versus"],
+    "roomType": "chess"
+  },
+  "version": "1.0.0"
+}
